@@ -1,0 +1,127 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'war'
+}
+
+// Project Metadata
+project.group = 'com.epam'
+project.version = '1.0-SNAPSHOT'
+
+// Java Compatibility
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+// Dependency Versions
+ext {
+    springContextVersion = '6.2.2'
+    springOrmVersion = '6.2.4'
+    springMvcVersion = '6.2.4'
+    jakartaAnnotationVersion = '2.1.1'
+    jakartaValidationVersion = '3.1.0'
+    hibernateValidatorVersion = '8.0.1.Final'
+    jakartaElVersion = '4.0.2'
+    jakartaServlerApiVersion='6.1.0'
+    commonsLangVersion = '3.17.0'
+    aspectjVersion = '1.9.22.1'
+    jacksonVersion = '2.17.1'
+    lombokVersion = '1.18.36'
+    mapstructVersion = '1.6.3'
+    log4jVersion = '2.24.3'
+    mockitoVersion = '5.14.2'
+    junitVersion = '5.11.4'
+    jetbrainsAnnotationsVersion = '24.0.0'
+    jpaVersion = '3.2.0'
+    hibernateVersion = '7.0.0.Alpha3'
+    jacocoVersion = '0.8.10'
+    tomcatVersion='10.1.39';
+    h2Version='2.2.220'
+    mysqlVersion='8.0.33'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring
+    implementation group: 'org.springframework', name: 'spring-context', version: springContextVersion
+    implementation group: 'org.springframework', name: 'spring-orm', version: springOrmVersion
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: springMvcVersion
+
+    // Jakarta API
+    implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: jakartaAnnotationVersion
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: jakartaValidationVersion
+    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: hibernateValidatorVersion
+    implementation group: 'org.glassfish', name: 'jakarta.el', version: jakartaElVersion
+    compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: jakartaServlerApiVersion
+
+    // Tomcat
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: tomcatVersion
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: tomcatVersion
+
+
+    // Apache Commons
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
+
+    // AspectJ
+    implementation group: 'org.aspectj', name: 'aspectjweaver', version: aspectjVersion
+
+    // Jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: jacksonVersion
+
+
+    // Lombok
+    implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+
+    // MapStruct
+    implementation group: 'org.mapstruct', name: 'mapstruct', version: mapstructVersion
+    annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: mapstructVersion
+
+    // Log4j
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j2-impl', version: log4jVersion
+
+    // Mockito (Testing)
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
+
+    // JUnit
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
+
+    // JetBrains Annotations
+    compileOnly group: 'org.jetbrains', name: 'annotations', version: jetbrainsAnnotationsVersion
+
+    // JPA
+    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: jpaVersion
+
+    // Hibernate
+    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: hibernateVersion
+
+    // H2
+    implementation group: 'com.h2database', name: 'h2', version: h2Version
+    implementation group: 'mysql', name: 'mysql-connector-java', version: mysqlVersion
+
+}
+
+
+// Jacoco Configuration
+jacoco {
+    toolVersion = jacocoVersion
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy(tasks.named("jacocoTestReport"))
+}
+
+jacocoTestReport {
+    reports {
+        html.required.set(true)
+    }
+}
