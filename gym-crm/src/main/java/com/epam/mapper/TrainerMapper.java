@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = TraineeMapper.class)
-public abstract class TrainerMapper {
+public interface TrainerMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "specialization", ignore = true)
@@ -19,8 +19,7 @@ public abstract class TrainerMapper {
     @Mapping(target = "user.password", ignore = true)
     @Mapping(target = "user.firstname", source = "firstname")
     @Mapping(target = "user.lastname", source = "lastname")
-    public abstract void updateEntity(@MappingTarget Trainer entity, TrainerProfileUpdateDto dto);
-
+    void updateEntity(@MappingTarget Trainer entity, TrainerProfileUpdateDto dto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "trainees", ignore = true)
@@ -28,20 +27,18 @@ public abstract class TrainerMapper {
     @Mapping(target = "user.isActive", constant = "true")
     @Mapping(target = "user.firstname", source = "firstname")
     @Mapping(target = "user.lastname", source = "lastname")
-    public abstract Trainer toEntity(TrainerRegistrationDto trainerRegistrationRequest);
-
+    Trainer toEntity(TrainerRegistrationDto trainerRegistrationRequest);
 
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "firstname", source = "user.firstname")
     @Mapping(target = "lastname", source = "user.lastname")
     @Mapping(target = "specialization", source = "specialization.name")
-    public abstract TraineeTrainerDto toTraineeTrainerDto(Trainer trainer);
-
+    TraineeTrainerDto toTraineeTrainerDto(Trainer trainer);
 
     @Mapping(target = "firstname", source = "user.firstname")
     @Mapping(target = "lastname", source = "user.lastname")
     @Mapping(target = "isActive", source = "user.isActive")
     @Mapping(target = "specialization", source = "specialization.name")
-    public abstract TrainerProfileDto toTrainerProfileDto(Trainer trainer);
+    TrainerProfileDto toTrainerProfileDto(Trainer trainer);
 
 }

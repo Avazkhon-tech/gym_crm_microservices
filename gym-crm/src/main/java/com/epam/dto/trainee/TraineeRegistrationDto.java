@@ -15,7 +15,7 @@ public record TraineeRegistrationDto(
         @NotBlank(message = "Lastname field cannot be empty")
         String lastname,
 
-        @Past(message = "Date of birth must be in hte past")
+        @Past(message = "Date of birth must be in the past")
         LocalDate dateOfBirth,
 
         String address

@@ -14,13 +14,11 @@ import com.epam.repository.TraineeRepository;
 import com.epam.repository.TrainerRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
 @AllArgsConstructor
 public class TraineeService {
@@ -93,7 +91,7 @@ public class TraineeService {
         Trainee trainee = traineeRepository.findByUsername(traineeUsername)
                 .orElseThrow(() -> new EntityDoesNotExistException(traineeUsername, "username", "Trainee"));
 
-        List<Trainer> trainers = trainerRepository.findAllByUsername(trainerUsernames);
+        List<Trainer> trainers = trainerRepository.findAllByUsernames(trainerUsernames);
 
         trainee.getTrainers().clear();
         trainee.getTrainers().addAll(trainers);

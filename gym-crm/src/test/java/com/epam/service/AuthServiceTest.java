@@ -1,16 +1,19 @@
 package com.epam.service;
 
 import com.epam.dto.auth.LoginDto;
+import com.epam.exception.AuthenticationException;
 import com.epam.model.User;
 import com.epam.repository.UserRepository;
+import com.epam.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.naming.AuthenticationException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +24,15 @@ class AuthServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private JwtProvider jwtProvider;
+
+    @Spy
+    private BruteForceDefenseService bruteForceDefenseService;
+
+    @Spy
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private AuthService authService;
@@ -44,7 +56,7 @@ class AuthServiceTest {
     @Test
     void authenticate_Success() {
         when(userRepository.findByUsername("user")).thenReturn(Optional.of(user));
-
+        when(passwordEncoder.matches("password", "password")).thenReturn(true);
         assertDoesNotThrow(() -> authService.authenticate(validCredentials));
     }
 

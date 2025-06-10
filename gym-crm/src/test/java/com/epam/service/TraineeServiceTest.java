@@ -152,7 +152,7 @@ class TraineeServiceTest {
                     () -> traineeService.getTraineeProfile(username));
 
             verify(traineeRepository).findByUsername(username);
-            verify(traineeMapper, never()).toTraineeTraineeDto(any());
+            verify(traineeMapper, never()).toTraineeProfileDto(any());
         }
     }
 
@@ -290,7 +290,7 @@ class TraineeServiceTest {
             List<TraineeTrainerDto> expectedTrainerDtos = List.of(TraineeTrainerDto.builder().build(), TraineeTrainerDto.builder().build());
 
             when(traineeRepository.findByUsername(traineeUsername)).thenReturn(Optional.of(trainee));
-            when(trainerRepository.findAllByUsername(trainerUsernames)).thenReturn(trainers);
+            when(trainerRepository.findAllByUsernames(trainerUsernames)).thenReturn(trainers);
             when(trainerMapper.toTraineeTrainerDto(any(Trainer.class))).thenReturn(TraineeTrainerDto.builder().build());
             when(traineeRepository.save(trainee)).thenReturn(trainee);
 
@@ -301,7 +301,7 @@ class TraineeServiceTest {
             assertEquals(expectedTrainerDtos.size(), result.size());
 
             verify(traineeRepository).findByUsername(traineeUsername);
-            verify(trainerRepository).findAllByUsername(trainerUsernames);
+            verify(trainerRepository).findAllByUsernames(trainerUsernames);
             verify(traineeRepository).save(trainee);
         }
 
@@ -318,7 +318,7 @@ class TraineeServiceTest {
             );
 
             verify(traineeRepository).findByUsername(traineeUsername);
-            verify(trainerRepository, never()).findAllByUsername(any());
+            verify(trainerRepository, never()).findAllByUsernames(any());
             verify(traineeRepository, never()).save(any());
         }
     }

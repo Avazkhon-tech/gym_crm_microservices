@@ -2,11 +2,12 @@ package com.epam.controller;
 
 import com.epam.model.TrainingType;
 import com.epam.service.TrainingTypeService;
-import com.epam.utility.AuthUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -16,11 +17,10 @@ import java.util.List;
 public class TrainingTypeController {
 
     private final TrainingTypeService trainingTypeService;
-    private final AuthUtil authUtil;
 
+    @Operation(summary = "Get all training types")
     @GetMapping
-    public ResponseEntity<List<TrainingType>> getAllTrainingTypes(@RequestHeader HttpHeaders headers) {
-        authUtil.validateUser(headers);
+    public ResponseEntity<List<TrainingType>> getAllTrainingTypes() {
         List<TrainingType> trainingTypes = trainingTypeService.getAllTrainingTypes();
         return ResponseEntity.ok(trainingTypes);
     }

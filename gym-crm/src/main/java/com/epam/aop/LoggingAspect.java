@@ -26,7 +26,6 @@ public class LoggingAspect {
 
     @Around("controllerMethods()")
     public Object logRestCall(ProceedingJoinPoint joinPoint) throws Throwable {
-        TransactionId.addTransactionId();
         String transactionId = TransactionId.getTransaction();
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -46,7 +45,6 @@ public class LoggingAspect {
 
         log.info("[{}] Response: {}", transactionId, sanitizedResponse);
 
-        TransactionId.removeTransactionId();
         return response;
     }
 
@@ -91,10 +89,10 @@ public class LoggingAspect {
                 return requestMapping.method()[0].name();
             }
         }
-        return "UNKNOWN";
+        return "";
     }
 
     private String maskSensitiveData(String data) {
-        return data.replaceAll("(password=)([^,\\]]+)", "$1******");
+        return data.replaceAll("(?<=password=|oldPassword=)([^,\\]]+)", "******");
     }
 }

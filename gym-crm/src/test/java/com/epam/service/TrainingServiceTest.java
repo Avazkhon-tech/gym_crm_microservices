@@ -6,31 +6,45 @@ import com.epam.dto.tranining.TraineeTrainingDto;
 import com.epam.dto.tranining.TrainerTrainingDto;
 import com.epam.dto.tranining.TrainingCreateDto;
 import com.epam.exception.EntityDoesNotExistException;
+import com.epam.feign.TrainerWorkloadClient;
 import com.epam.mapper.TrainingMapper;
 import com.epam.model.*;
 import com.epam.repository.TraineeRepository;
 import com.epam.repository.TrainerRepository;
 import com.epam.repository.TrainingRepository;
+import com.epam.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TrainingServiceTest {
+
+    @Mock
+    private JwtProvider jwtProvider;
+
+    @Mock
+    private TrainerWorkloadClient trainerWorkloadClient;
 
     @Mock
     private TrainerRepository trainerRepository;
@@ -140,14 +154,28 @@ class TrainingServiceTest {
 
         @Test
         void shouldAddTrainingSuccessfully() {
+            // Mocks for trainer and trainee
             when(trainerRepository.findByUsername(trainer.getUser().getUsername())).thenReturn(Optional.of(trainer));
             when(traineeRepository.findByUsername(trainee.getUser().getUsername())).thenReturn(Optional.of(trainee));
             when(trainingMapper.toEntity(trainingCreateDto)).thenReturn(new Training());
-            
-            trainingService.createTraining(trainingCreateDto);
 
-            verify(traineeRepository).findByUsername(trainee.getUser().getUsername());
-            verify(trainerRepository).findByUsername(trainer.getUser().getUsername());
+            // Mocking SecurityContext and Authentication
+            Authentication authentication = mock(Authentication.class);
+            when(authentication.getName()).thenReturn(trainee.getUser().getUsername());
+
+            SecurityContext securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+
+            try (MockedStatic<SecurityContextHolder> mockedSecurityContextHolder = mockStatic(SecurityContextHolder.class)) {
+                mockedSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+
+                // Act
+                trainingService.createTraining(trainingCreateDto);
+
+                // Assert
+                verify(traineeRepository).findByUsername(trainee.getUser().getUsername());
+                verify(trainerRepository).findByUsername(trainer.getUser().getUsername());
+            }
         }
 
         @Test

@@ -21,6 +21,6 @@ public record TraineeProfileUpdateDto(
 
         String address,
 
-        @NotNull
+        @NotNull(message = "isActive cannot be empty")
         Boolean isActive
 ) {}

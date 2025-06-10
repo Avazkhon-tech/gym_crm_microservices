@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "trainer")
-@ToString
 public class Trainer {
 
     @Id
@@ -27,5 +26,4 @@ public class Trainer {
 
     @ManyToMany(mappedBy = "trainers", fetch = FetchType.LAZY)
     private List<Trainee> trainees;
-
 }

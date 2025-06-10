@@ -11,19 +11,20 @@ import java.time.LocalDate;
 @Builder
 public record TrainingCreateDto(
 
-        @NotBlank
+        @NotBlank(message = "traineeUsername cannot be empty")
         String traineeUsername,
 
-        @NotBlank
+        @NotBlank(message = "trainerUsername cannot be empty")
         String trainerUsername,
 
-        @NotNull
+        @NotBlank(message = "training name cannot be empty")
         String trainingName,
 
-        @Future
+        @Future(message = "traningDate has to be in the future")
         LocalDate trainingDate,
 
-        @NotNull @Positive
+        @NotNull(message = "trainingDuration cannot be empty")
+        @Positive(message = "trainingDuration cannot be 0 or lower")
         Integer trainingDuration
 ) {}
 

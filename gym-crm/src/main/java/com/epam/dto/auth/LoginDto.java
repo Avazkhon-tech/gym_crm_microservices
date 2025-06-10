@@ -1,7 +1,9 @@
 package com.epam.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 
+@Builder
 public record LoginDto(
 
         @NotBlank(message = "Username field cannot be empty")

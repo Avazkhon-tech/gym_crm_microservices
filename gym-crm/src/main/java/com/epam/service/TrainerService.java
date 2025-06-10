@@ -13,20 +13,17 @@ import com.epam.repository.TrainingTypeRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-@Validated
 public class TrainerService {
 
     private final TrainerRepository trainerRepository;
     private final TrainingTypeRepository trainingTypeRepository;
     private final UserService userService;
     private final TrainerMapper trainerMapper;
-    private final TraineeService traineeService;
 
     @Transactional
     public LoginDto createTrainer(TrainerRegistrationDto trainerRegistrationRequest) {

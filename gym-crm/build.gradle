@@ -1,118 +1,100 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '3.4.4'
+    id 'io.spring.dependency-management' version '1.1.7'
     id 'jacoco'
-    id 'war'
 }
 
-// Project Metadata
-project.group = 'com.epam'
-project.version = '1.0-SNAPSHOT'
+group = 'com.epam'
+version = '0.0.1-SNAPSHOT'
 
-// Java Compatibility
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-// Dependency Versions
-ext {
-    springContextVersion = '6.2.2'
-    springOrmVersion = '6.2.4'
-    springMvcVersion = '6.2.4'
-    jakartaAnnotationVersion = '2.1.1'
-    jakartaValidationVersion = '3.1.0'
-    hibernateValidatorVersion = '8.0.1.Final'
-    jakartaElVersion = '4.0.2'
-    jakartaServlerApiVersion='6.1.0'
-    commonsLangVersion = '3.17.0'
-    aspectjVersion = '1.9.22.1'
-    jacksonVersion = '2.17.1'
-    lombokVersion = '1.18.36'
-    mapstructVersion = '1.6.3'
-    log4jVersion = '2.24.3'
-    mockitoVersion = '5.14.2'
-    junitVersion = '5.11.4'
-    jetbrainsAnnotationsVersion = '24.0.0'
-    jpaVersion = '3.2.0'
-    hibernateVersion = '7.0.0.Alpha3'
-    jacocoVersion = '0.8.10'
-    tomcatVersion='10.1.39';
-    h2Version='2.2.220'
-    mysqlVersion='8.0.33'
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 repositories {
     mavenCentral()
 }
 
+ext {
+    log4jVersion = '2.24.3'
+    lombokVersion = '1.18.36'
+    jakartaAnnotationVersion = '2.1.1'
+    jakartaValidationVersion = '3.1.0'
+    hibernateValidatorVersion = '8.0.1.Final'
+    mapstructVersion = '1.6.3'
+    commonsLangVersion = '3.17.0'
+    instancioVersion = '5.4.1'
+    springDocVersion = '2.8.6'
+    jwtVersion = '0.12.6'
+    springCloudOpenFeign = '4.2.1'
+    springEurekaClient = '4.2.1'
+    springCloudVersion = "2024.0.1"
+    circuitBreaker = '2.3.0'
+
+}
+
 dependencies {
-    // Spring
-    implementation group: 'org.springframework', name: 'spring-context', version: springContextVersion
-    implementation group: 'org.springframework', name: 'spring-orm', version: springOrmVersion
-    implementation group: 'org.springframework', name: 'spring-webmvc', version: springMvcVersion
 
-    // Jakarta API
-    implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: jakartaAnnotationVersion
-    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: jakartaValidationVersion
-    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: hibernateValidatorVersion
-    implementation group: 'org.glassfish', name: 'jakarta.el', version: jakartaElVersion
-    compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: jakartaServlerApiVersion
+    // spring boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.4.4'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: springCloudOpenFeign
 
-    // Tomcat
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: tomcatVersion
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: tomcatVersion
+    // eureka
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: springEurekaClient
 
 
-    // Apache Commons
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
+    // prometheus
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
-    // AspectJ
-    implementation group: 'org.aspectj', name: 'aspectjweaver', version: aspectjVersion
+    // circuit breaker
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    implementation group: 'io.github.resilience4j', name: 'resilience4j-circuitbreaker', version: circuitBreaker
 
-    // Jackson
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
-    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: jacksonVersion
-
+    // database
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
     // Lombok
     implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
 
+    // Jakarta API
+    implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: jakartaAnnotationVersion
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: jakartaValidationVersion
+    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: hibernateValidatorVersion
+
     // MapStruct
     implementation group: 'org.mapstruct', name: 'mapstruct', version: mapstructVersion
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: mapstructVersion
 
-    // Log4j
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j2-impl', version: log4jVersion
+    // Apache Commons
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
 
-    // Mockito (Testing)
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
-    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
 
-    // JUnit
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
+    // test
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation group: 'org.instancio', name: 'instancio-junit', version: instancioVersion
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 
-    // JetBrains Annotations
-    compileOnly group: 'org.jetbrains', name: 'annotations', version: jetbrainsAnnotationsVersion
+    // jwt
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: jwtVersion
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: jwtVersion
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: jwtVersion
 
-    // JPA
-    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: jpaVersion
 
-    // Hibernate
-    implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: hibernateVersion
-
-    // H2
-    implementation group: 'com.h2database', name: 'h2', version: h2Version
-    implementation group: 'mysql', name: 'mysql-connector-java', version: mysqlVersion
 
 }
 
-
-// Jacoco Configuration
 jacoco {
-    toolVersion = jacocoVersion
+    toolVersion = '0.8.10'
 }
 
 tasks.named('test') {
@@ -123,5 +105,10 @@ tasks.named('test') {
 jacocoTestReport {
     reports {
         html.required.set(true)
+    }
+}
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
     }
 }

@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "brute.force.login.max.attempts",
+      "type": "java.lang.String",
+      "description": "Number of attempts before user get blocked"
+    },
+    {
+      "name": "brute.force.login.locked.minutes",
+      "type": "java.lang.String",
+      "description": "Minutes to lock user after too many failed attempts"
+    }
+  ] }

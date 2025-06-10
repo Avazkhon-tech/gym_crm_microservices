@@ -1,6 +1,7 @@
 package com.epam.dto.trainer;
 
-public record TrainerTraineeDto(
+public record
+TrainerTraineeDto(
 
         String username,
 
