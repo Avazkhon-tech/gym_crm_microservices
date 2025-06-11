@@ -55,7 +55,6 @@ dependencies {
 
     // circuit breaker
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-    implementation group: 'io.github.resilience4j', name: 'resilience4j-circuitbreaker', version: circuitBreaker
 
     // database
     runtimeOnly 'com.h2database:h2'
