@@ -1,37 +1,38 @@
 version: '3.9'
+
 services:
   eureka-server:
     build:
-      context: ./eureka-server
+      context: ${EUREKA_SERVER_PATH}
     ports:
-      - "8761:8761"
+      - "${EUREKA_SERVER_PORT}:${EUREKA_SERVER_PORT}"
     networks:
       - microservices-net
 
   trainer-workload-service:
     build:
-      context: ./trainer-workload-service
+      context: ${TRAINER_WORKLOAD_PATH}
     ports:
-      - "8081:8081"
+      - "${TRAINER_WORKLOAD_PORT}:${TRAINER_WORKLOAD_PORT}"
     depends_on:
       - eureka-server
     networks:
       - microservices-net
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_DEFAULT_ZONE}
 
   gym-crm:
     build:
-      context: ./gym-crm
+      context: ${GYM_CRM_PATH}
     ports:
-      - "8080:8080"
+      - "${GYM_CRM_PORT}:${GYM_CRM_PORT}"
     depends_on:
       - eureka-server
       - trainer-workload-service
     networks:
       - microservices-net
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_DEFAULT_ZONE}
 
 networks:
   microservices-net:
