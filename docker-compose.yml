@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  eureka-server:
+    build:
+      context: ./eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-net
+
+  trainer-workload-service:
+    build:
+      context: ./trainer-workload-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - eureka-server
+    networks:
+      - microservices-net
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  gym-crm:
+    build:
+      context: ./gym-crm
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+      - trainer-workload-service
+    networks:
+      - microservices-net
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+networks:
+  microservices-net:
+    driver: bridge

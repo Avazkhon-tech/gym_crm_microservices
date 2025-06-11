@@ -19,7 +19,7 @@ public class TransactionIdFilter extends OncePerRequestFilter {
         if (transactionId == null) {
             TransactionId.addTransactionId();
         } else {
-            TransactionId.addTransactionId(request.getHeader(transactionId));
+            TransactionId.addTransactionId(transactionId);
         }
         try {
             filterChain.doFilter(request, response);
