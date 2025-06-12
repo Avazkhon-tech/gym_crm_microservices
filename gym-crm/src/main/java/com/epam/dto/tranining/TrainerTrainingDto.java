@@ -15,7 +15,7 @@ public record TrainerTrainingDto(
 
         String trainingType,
 
-        Integer trainingDuration,
+        Integer trainingDurationMinutes,
 
         String traineeName
 

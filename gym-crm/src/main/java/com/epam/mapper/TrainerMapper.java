@@ -4,10 +4,14 @@ import com.epam.dto.trainee.TraineeTrainerDto;
 import com.epam.dto.trainer.TrainerProfileDto;
 import com.epam.dto.trainer.TrainerProfileUpdateDto;
 import com.epam.dto.trainer.TrainerRegistrationDto;
+import com.epam.dto.trainer.TrainerTraineeDto;
+import com.epam.model.Trainee;
 import com.epam.model.Trainer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring", uses = TraineeMapper.class)
 public interface TrainerMapper {
@@ -40,5 +44,12 @@ public interface TrainerMapper {
     @Mapping(target = "isActive", source = "user.isActive")
     @Mapping(target = "specialization", source = "specialization.name")
     TrainerProfileDto toTrainerProfileDto(Trainer trainer);
+
+    List<TrainerTraineeDto> toTrainerTraineeDtoList(List<Trainee> trainees);
+
+    @Mapping(target = "username", source = "user.username")
+    @Mapping(target = "firstname", source = "user.firstname")
+    @Mapping(target = "lastname", source = "user.lastname")
+    TrainerTraineeDto toTrainerTraineeDto(Trainee trainee);
 
 }

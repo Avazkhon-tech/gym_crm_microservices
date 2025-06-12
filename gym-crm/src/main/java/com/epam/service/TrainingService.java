@@ -86,7 +86,7 @@ public class TrainingService {
                 .lastname(trainingCreateDtoDto.trainerUsername())
                 .isActive(trainer.getUser().getIsActive())
                 .trainingDate(trainingCreateDtoDto.trainingDate())
-                .trainingDuration(trainingCreateDtoDto.trainingDuration())
+                .trainingDurationMinutes(trainingCreateDtoDto.trainingDurationMinutes())
                 .actionType(ActionType.ADD)
                 .build();
 

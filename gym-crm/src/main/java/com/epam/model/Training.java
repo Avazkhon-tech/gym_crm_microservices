@@ -36,6 +36,6 @@ public class Training {
     private LocalDate trainingDate;
 
     @Column(name = "training_duration", nullable = false)
-    private Integer trainingDuration;
+    private Integer trainingDurationMinutes;
 
 }

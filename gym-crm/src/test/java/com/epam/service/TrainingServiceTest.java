@@ -215,7 +215,7 @@ class TrainingServiceTest {
                             .trainingName("Strength & Conditioning")
                             .trainingType(trainingType)
                             .trainingDate(LocalDate.of(2023, 5, 10))
-                            .trainingDuration(60)
+                            .trainingDurationMinutes(60)
                             .build(),
                     Training.builder()
                             .id(2L)
@@ -224,7 +224,7 @@ class TrainingServiceTest {
                             .trainingName("Endurance Training")
                             .trainingType(trainingType)
                             .trainingDate(LocalDate.of(2023, 6, 15))
-                            .trainingDuration(90)
+                            .trainingDurationMinutes(90)
                             .build()
             );
         }
@@ -272,7 +272,7 @@ class TrainingServiceTest {
                             .trainingName("Morning Fitness")
                             .trainingType(trainingType)
                             .trainingDate(LocalDate.of(2023, 5, 10))
-                            .trainingDuration(60)
+                            .trainingDurationMinutes(60)
                             .build(),
                     Training.builder()
                             .id(2L)
@@ -281,7 +281,7 @@ class TrainingServiceTest {
                             .trainingName("Evening Yoga")
                             .trainingType(trainingType)
                             .trainingDate(LocalDate.of(2023, 6, 15))
-                            .trainingDuration(90)
+                            .trainingDurationMinutes(90)
                             .build()
             );
         }

@@ -27,7 +27,7 @@ public record TrainerWorkloadDto (
 
         @NotNull
         @Positive(message = "Training duration must be a positive number")
-        Integer trainingDuration,
+        Integer trainingDurationMinutes,
 
         @NotNull(message = "Action type must not be null")
         ActionType actionType

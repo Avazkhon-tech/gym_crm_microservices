@@ -48,7 +48,7 @@ class TrainerWorkloadServiceTest {
                 .actionType(ActionType.ADD)
                 .username("john_doe")
                 .trainingDate(LocalDate.of(2024, 5, 1))
-                .trainingDuration(30)
+                .trainingDurationMinutes(30)
                 .build();
 
         TrainerMonthlyWorkload existingWorkload = TrainerMonthlyWorkload.builder()
@@ -81,7 +81,7 @@ class TrainerWorkloadServiceTest {
                 .lastname("Smith")
                 .isActive(true)
                 .trainingDate(LocalDate.of(2024, 5, 1))
-                .trainingDuration(45)
+                .trainingDurationMinutes(45)
                 .build();
 
         Trainer newTrainer = Trainer.builder()
@@ -118,7 +118,7 @@ class TrainerWorkloadServiceTest {
                 .actionType(ActionType.DELETE)
                 .username("trainer_1")
                 .trainingDate(LocalDate.of(2024, 6, 1))
-                .trainingDuration(20)
+                .trainingDurationMinutes(20)
                 .build();
 
         TrainerMonthlyWorkload workload = TrainerMonthlyWorkload.builder()
@@ -155,7 +155,7 @@ class TrainerWorkloadServiceTest {
                 .actionType(ActionType.DELETE)
                 .username(username)
                 .trainingDate(LocalDate.of(2024, 7, 1))
-                .trainingDuration(20)
+                .trainingDurationMinutes(20)
                 .build();
 
         when(trainerRepository.findById(username)).thenReturn(Optional.of(trainer));
@@ -180,7 +180,7 @@ class TrainerWorkloadServiceTest {
                 .actionType(ActionType.DELETE)
                 .username("trainer_excess")
                 .trainingDate(LocalDate.of(2024, 8, 1))
-                .trainingDuration(100)
+                .trainingDurationMinutes(100)
                 .build();
 
         TrainerMonthlyWorkload workload = TrainerMonthlyWorkload.builder()

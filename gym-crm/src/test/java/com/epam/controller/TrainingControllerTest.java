@@ -50,7 +50,9 @@ class TrainingControllerTest {
     void shouldCreateTrainingSuccessfully() throws Exception {
 
         TrainingCreateDto trainingCreateDto = Instancio.of(TrainingCreateDto.class)
-                .set(Select.field(TrainingCreateDto::trainingDate), LocalDate.now().plusYears(10)).create();
+                .set(Select.field(TrainingCreateDto::trainingDate), LocalDate.now().plusYears(10))
+                .set(Select.field(TrainingCreateDto::trainingDurationMinutes), 60)
+                .create();
 
         doNothing().when(trainingService).createTraining(any(TrainingCreateDto.class));
 

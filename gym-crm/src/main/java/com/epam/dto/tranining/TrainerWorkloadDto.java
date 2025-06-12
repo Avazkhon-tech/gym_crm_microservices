@@ -13,6 +13,6 @@ public record TrainerWorkloadDto(
         String lastname,
         boolean isActive,
         LocalDate trainingDate,
-        Integer trainingDuration,
+        Integer trainingDurationMinutes,
         ActionType actionType
 ) {}

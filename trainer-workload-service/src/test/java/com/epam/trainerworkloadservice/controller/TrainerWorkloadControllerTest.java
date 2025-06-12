@@ -42,7 +42,7 @@ class TrainerWorkloadControllerTest {
                 .username("trainer1")
                 .actionType(ActionType.ADD)
                 .trainingDate(LocalDate.of(2024, 6, 1))
-                .trainingDuration(45)
+                .trainingDurationMinutes(45)
                 .firstname("John")
                 .lastname("Doe")
                 .isActive(true)

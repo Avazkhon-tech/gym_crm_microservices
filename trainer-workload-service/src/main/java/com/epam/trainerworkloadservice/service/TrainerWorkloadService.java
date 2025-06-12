@@ -35,7 +35,7 @@ public class TrainerWorkloadService {
         String username = trainerWorkloadDto.username();
         int year = trainerWorkloadDto.trainingDate().getYear();
         int month = trainerWorkloadDto.trainingDate().getMonthValue();
-        int duration = trainerWorkloadDto.trainingDuration();
+        int duration = trainerWorkloadDto.trainingDurationMinutes();
 
         Optional<TrainerMonthlyWorkload> optionalWorkload = trainerMonthlyWorkloadRepository.findByTrainerUsernameAndYearAndMonth(username, year, month);
 
