@@ -48,7 +48,7 @@ public class LoggingAspect {
         Object response = joinPoint.proceed();
         String sanitizedResponse = maskSensitiveData(response.toString());
 
-        log.info("[{}] Response: {}", transactionId, sanitizedResponse);
+        log.info("[{}] REST Call Response: {}", transactionId, sanitizedResponse);
 
         return response;
     }

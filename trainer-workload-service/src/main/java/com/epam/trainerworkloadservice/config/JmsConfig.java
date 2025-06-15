@@ -4,6 +4,7 @@ import com.epam.trainerworkloadservice.dto.TrainerWorkloadDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.RedeliveryPolicy;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.core.JmsTemplate;
@@ -36,8 +37,12 @@ public class JmsConfig {
     }
 
     @Bean
-    public ActiveMQConnectionFactory connectionFactory() {
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+    public ActiveMQConnectionFactory connectionFactory(
+            @Value("${spring.activemq.broker-url}") String brokerUrl,
+            @Value("${spring.activemq.user}") String username,
+            @Value("${spring.activemq.password}") String password) {
+
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(username, password, brokerUrl);
         connectionFactory.setTrustedPackages(List.of("com.epam"));
         RedeliveryPolicy redeliveryPolicy = new RedeliveryPolicy();
         redeliveryPolicy.setMaximumRedeliveries(2);
