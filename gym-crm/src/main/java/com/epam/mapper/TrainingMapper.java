@@ -1,9 +1,9 @@
 package com.epam.mapper;
 
 
-import com.epam.dto.tranining.TraineeTrainingDto;
-import com.epam.dto.tranining.TrainerTrainingDto;
-import com.epam.dto.tranining.TrainingCreateDto;
+import com.epam.dto.training.TraineeTrainingDto;
+import com.epam.dto.training.TrainerTrainingDto;
+import com.epam.dto.training.TrainingCreateDto;
 import com.epam.model.Training;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

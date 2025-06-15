@@ -7,6 +7,19 @@ services:
     networks:
       - microservices-net
 
+  activemq:
+    image: rmohr/activemq
+    container_name: activemq
+    platform: linux/amd64
+    ports:
+      - "${ACTIVEMQ_TCP_PORT}:${ACTIVEMQ_TCP_PORT}"
+      - "${ACTIVEMQ_WEB_PORT}:${ACTIVEMQ_WEB_PORT}"
+    environment:
+      - ACTIVEMQ_ADMIN_LOGIN=${ACTIVEMQ_USERNAME}
+      - ACTIVEMQ_ADMIN_PASSWORD=${ACTIVEMQ_PASSWORD}
+    networks:
+      - microservices-net
+
   trainer-workload-service:
     build:
       context: ${TRAINER_WORKLOAD_PATH}
@@ -14,10 +27,14 @@ services:
       - "${TRAINER_WORKLOAD_PORT}:${TRAINER_WORKLOAD_PORT}"
     depends_on:
       - eureka-server
+      - activemq
     networks:
       - microservices-net
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_DEFAULT_ZONE}
+      - SPRING_ACTIVEMQ_BROKER-URL=tcp://activemq:${ACTIVEMQ_TCP_PORT}
+      - SPRING_ACTIVEMQ_USER=${ACTIVEMQ_USERNAME}
+      - SPRING_ACTIVEMQ_PASSWORD=${ACTIVEMQ_PASSWORD}
 
   gym-crm:
     build:
@@ -27,10 +44,14 @@ services:
     depends_on:
       - eureka-server
       - trainer-workload-service
+      - activemq
     networks:
       - microservices-net
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=${EUREKA_DEFAULT_ZONE}
+      - SPRING_ACTIVEMQ_BROKER-URL=tcp://activemq:${ACTIVEMQ_TCP_PORT}
+      - SPRING_ACTIVEMQ_USER=${ACTIVEMQ_USERNAME}
+      - SPRING_ACTIVEMQ_PASSWORD=${ACTIVEMQ_PASSWORD}
 
 networks:
   microservices-net:

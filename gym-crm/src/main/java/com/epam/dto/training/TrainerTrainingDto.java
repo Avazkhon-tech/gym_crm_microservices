@@ -1,4 +1,4 @@
-package com.epam.dto.tranining;
+package com.epam.dto.training;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-public record TraineeTrainingDto(
+public record TrainerTrainingDto(
 
         String trainingName,
 
@@ -17,7 +17,7 @@ public record TraineeTrainingDto(
 
         Integer trainingDurationMinutes,
 
-        String trainerName
+        String traineeName
 
 ) {}
 

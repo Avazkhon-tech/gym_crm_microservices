@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Builder
@@ -32,4 +33,4 @@ public record TrainerWorkloadDto (
         @NotNull(message = "Action type must not be null")
         ActionType actionType
 
-) {}
+) implements Serializable {}

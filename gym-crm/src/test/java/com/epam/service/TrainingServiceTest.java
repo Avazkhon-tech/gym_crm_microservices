@@ -2,36 +2,36 @@ package com.epam.service;
 
 import com.epam.dto.trainee.TraineeTrainingFilter;
 import com.epam.dto.trainer.TrainerTrainingFilter;
-import com.epam.dto.tranining.TraineeTrainingDto;
-import com.epam.dto.tranining.TrainerTrainingDto;
-import com.epam.dto.tranining.TrainingCreateDto;
+import com.epam.dto.training.TraineeTrainingDto;
+import com.epam.dto.training.TrainerTrainingDto;
+import com.epam.dto.training.TrainingCreateDto;
+import com.epam.enums.ActionType;
 import com.epam.exception.EntityDoesNotExistException;
-import com.epam.feign.TrainerWorkloadClient;
 import com.epam.mapper.TrainingMapper;
+import com.epam.messaging.MessageSender;
 import com.epam.model.*;
 import com.epam.repository.TraineeRepository;
 import com.epam.repository.TrainerRepository;
 import com.epam.repository.TrainingRepository;
 import com.epam.security.JwtProvider;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
@@ -44,7 +44,7 @@ class TrainingServiceTest {
     private JwtProvider jwtProvider;
 
     @Mock
-    private TrainerWorkloadClient trainerWorkloadClient;
+    private MessageSender messageSender;
 
     @Mock
     private TrainerRepository trainerRepository;
@@ -140,12 +140,12 @@ class TrainingServiceTest {
 
     @Nested
     class AddTrainingTests {
-        
+
         private TrainingCreateDto trainingCreateDto;
-        
+
         @BeforeEach
         void setUp() {
-            trainingCreateDto =  TrainingCreateDto.builder()
+            trainingCreateDto = TrainingCreateDto.builder()
                     .trainingName(training.getTrainingName())
                     .traineeUsername(trainee.getUser().getUsername())
                     .trainerUsername(trainer.getUser().getUsername())
@@ -153,29 +153,44 @@ class TrainingServiceTest {
         }
 
         @Test
-        void shouldAddTrainingSuccessfully() {
-            // Mocks for trainer and trainee
-            when(trainerRepository.findByUsername(trainer.getUser().getUsername())).thenReturn(Optional.of(trainer));
-            when(traineeRepository.findByUsername(trainee.getUser().getUsername())).thenReturn(Optional.of(trainee));
-            when(trainingMapper.toEntity(trainingCreateDto)).thenReturn(new Training());
+        void createTraining_shouldSaveTrainingAndSendWorkload() {
+            // Generate test data using Instancio
+            TrainingCreateDto dto = Instancio.of(TrainingCreateDto.class)
+                    .set(field("traineeUsername"), "trainee1")
+                    .set(field("trainerUsername"), "trainer1")
+                    .set(field("trainingDate"), LocalDate.of(2025, 6, 13))
+                    .set(field("trainingDurationMinutes"), 60)
+                    .create();
 
-            // Mocking SecurityContext and Authentication
-            Authentication authentication = mock(Authentication.class);
-            when(authentication.getName()).thenReturn(trainee.getUser().getUsername());
+            Trainee trainee = Instancio.create(Trainee.class);
+            Trainer trainer = Instancio.create(Trainer.class);
+            Training training = Instancio.create(Training.class);
 
-            SecurityContext securityContext = mock(SecurityContext.class);
-            when(securityContext.getAuthentication()).thenReturn(authentication);
+            TrainingType specialization = Instancio.create(TrainingType.class);
+            User trainerUser = Instancio.of(User.class)
+                    .set(field("isActive"), true)
+                    .create();
 
-            try (MockedStatic<SecurityContextHolder> mockedSecurityContextHolder = mockStatic(SecurityContextHolder.class)) {
-                mockedSecurityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            trainer.setSpecialization(specialization);
+            trainer.setUser(trainerUser);
 
-                // Act
-                trainingService.createTraining(trainingCreateDto);
+            // Stubbing
+            when(traineeRepository.findByUsername("trainee1")).thenReturn(Optional.of(trainee));
+            when(trainerRepository.findByUsername("trainer1")).thenReturn(Optional.of(trainer));
+            when(trainingMapper.toEntity(dto)).thenReturn(training);
 
-                // Assert
-                verify(traineeRepository).findByUsername(trainee.getUser().getUsername());
-                verify(trainerRepository).findByUsername(trainer.getUser().getUsername());
-            }
+            // When
+            trainingService.createTraining(dto);
+
+            // Then
+            verify(trainingRepository).save(training);
+            verify(messageSender).sendTrainerWorkload(argThat(arg ->
+                    arg.username().equals("trainer1") &&
+                            arg.trainingDate().equals(dto.trainingDate()) &&
+                            arg.trainingDurationMinutes().equals(dto.trainingDurationMinutes()) &&
+                            arg.isActive() &&
+                            arg.actionType() == ActionType.ADD
+            ));
         }
 
         @Test
@@ -197,9 +212,10 @@ class TrainingServiceTest {
 
         private TraineeTrainingFilter criteria;
         private List<Training> expectedTrainings;
+
         @BeforeEach
         void setUp() {
-           criteria = new TraineeTrainingFilter(
+            criteria = new TraineeTrainingFilter(
                     trainee.getUser().getUsername(),
                     LocalDate.of(2023, 1, 1),
                     LocalDate.of(2023, 12, 31),
@@ -246,7 +262,6 @@ class TrainingServiceTest {
             assertThrows(EntityDoesNotExistException.class, () -> trainingService.getTraineeTrainingsByCriteria(criteria));
         }
     }
-
 
 
     @Nested

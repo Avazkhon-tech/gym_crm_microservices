@@ -24,6 +24,9 @@ public class LoggingAspect {
     @Pointcut("execution(* com.epam.controller..*(..))")
     public void controllerMethods() {}
 
+    @Pointcut("execution(* com.epam.messaging..*(..))")
+    public void messagingMethods() {}
+
     @Around("controllerMethods()")
     public Object logRestCall(ProceedingJoinPoint joinPoint) throws Throwable {
         String transactionId = TransactionId.getTransaction();
@@ -48,7 +51,7 @@ public class LoggingAspect {
         return response;
     }
 
-    @Around("serviceMethods()")
+    @Around("serviceMethods() || messagingMethods()")
     public Object logExecution(ProceedingJoinPoint joinPoint) throws Throwable {
         String transactionId = TransactionId.getTransaction();
 

@@ -2,9 +2,9 @@ package com.epam.controller;
 
 import com.epam.dto.trainee.TraineeTrainingFilter;
 import com.epam.dto.trainer.TrainerTrainingFilter;
-import com.epam.dto.tranining.TraineeTrainingDto;
-import com.epam.dto.tranining.TrainerTrainingDto;
-import com.epam.dto.tranining.TrainingCreateDto;
+import com.epam.dto.training.TraineeTrainingDto;
+import com.epam.dto.training.TrainerTrainingDto;
+import com.epam.dto.training.TrainingCreateDto;
 import com.epam.security.TestSecurityConfig;
 import com.epam.service.TrainingService;
 import com.fasterxml.jackson.databind.ObjectMapper;

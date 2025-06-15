@@ -1,6 +1,6 @@
 package com.epam.feign;
 
-import com.epam.dto.tranining.TrainerWorkloadDto;
+import com.epam.dto.training.TrainerWorkloadDto;
 import com.epam.feign.fallback.TrainerWorkloadFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

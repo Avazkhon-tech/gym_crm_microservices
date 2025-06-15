@@ -1,6 +1,6 @@
 package com.epam.feign.fallback;
 
-import com.epam.dto.tranining.TrainerWorkloadDto;
+import com.epam.dto.training.TrainerWorkloadDto;
 import com.epam.feign.TrainerWorkloadClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

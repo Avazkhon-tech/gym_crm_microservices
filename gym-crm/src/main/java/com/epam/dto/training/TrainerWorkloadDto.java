@@ -1,8 +1,9 @@
-package com.epam.dto.tranining;
+package com.epam.dto.training;
 
 import com.epam.enums.ActionType;
 import lombok.Builder;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Builder
@@ -15,4 +16,4 @@ public record TrainerWorkloadDto(
         LocalDate trainingDate,
         Integer trainingDurationMinutes,
         ActionType actionType
-) {}
+) implements Serializable {}

@@ -2,14 +2,14 @@ package com.epam.service;
 
 import com.epam.dto.trainee.TraineeTrainingFilter;
 import com.epam.dto.trainer.TrainerTrainingFilter;
-import com.epam.dto.tranining.TraineeTrainingDto;
-import com.epam.dto.tranining.TrainerTrainingDto;
-import com.epam.dto.tranining.TrainerWorkloadDto;
-import com.epam.dto.tranining.TrainingCreateDto;
+import com.epam.dto.training.TraineeTrainingDto;
+import com.epam.dto.training.TrainerTrainingDto;
+import com.epam.dto.training.TrainerWorkloadDto;
+import com.epam.dto.training.TrainingCreateDto;
 import com.epam.enums.ActionType;
 import com.epam.exception.EntityDoesNotExistException;
-import com.epam.feign.TrainerWorkloadClient;
 import com.epam.mapper.TrainingMapper;
+import com.epam.messaging.MessageSender;
 import com.epam.model.Trainee;
 import com.epam.model.Trainer;
 import com.epam.model.Training;
@@ -17,10 +17,8 @@ import com.epam.repository.TraineeRepository;
 import com.epam.repository.TrainerRepository;
 import com.epam.repository.TrainingRepository;
 import com.epam.security.JwtProvider;
-import com.epam.utility.TransactionId;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,8 +31,8 @@ public class TrainingService {
     private final TraineeRepository traineeRepository;
     private final TrainerRepository trainerRepository;
     private final TrainingMapper trainingMapper;
-    private final TrainerWorkloadClient trainerWorkloadClient;
     private final JwtProvider jwtProvider;
+    private final MessageSender messageSender;
 
 
     public List<TrainerTrainingDto> getAllTraining() {
@@ -90,11 +88,7 @@ public class TrainingService {
                 .actionType(ActionType.ADD)
                 .build();
 
-        String currentUserUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        String clientToken = "Bearer " + jwtProvider.generateToken(currentUserUsername);
-
-        trainerWorkloadClient.updateTrainerWorkload(trainerWorkloadDto, clientToken, TransactionId.getTransaction());
+        messageSender.sendTrainerWorkload(trainerWorkloadDto);
 
     }
 }

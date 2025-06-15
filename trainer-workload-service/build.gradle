@@ -11,6 +11,7 @@ ext {
     jakartaValidationVersion = '3.1.0'
     jakartaAnnotationVersion = '2.1.1'
     hibernateValidatorVersion = '8.0.1.Final'
+    fasterXml = '2.19.0'
 
 }
 
@@ -31,6 +32,12 @@ dependencies {
 
     // web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // data type support
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: fasterXml
+
+    // ActiveMQ
+    implementation 'org.springframework.boot:spring-boot-starter-activemq'
 
     // database
     runtimeOnly 'com.h2database:h2'
