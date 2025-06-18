@@ -1,5 +1,8 @@
 package com.epam.dto.training;
 
+import com.epam.serialization.CustomLocalDateDeserializer;
+import com.epam.serialization.CustomStringDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -19,9 +22,12 @@ public record TrainingCreateDto(
         String trainerUsername,
 
         @NotBlank(message = "training name cannot be empty")
+        @JsonDeserialize(using = CustomStringDeserializer.class)
         String trainingName,
 
         @Future(message = "trainingDate has to be in the future")
+        @NotNull(message = "trainingDate cannot be null")
+        @JsonDeserialize(using = CustomLocalDateDeserializer.class)
         LocalDate trainingDate,
 
         @NotNull(message = "trainingDurationMinutes cannot be empty")

@@ -3,6 +3,7 @@ package com.epam.trainerworkloadservice.service;
 import com.epam.trainerworkloadservice.dto.TrainerWorkloadDto;
 import com.epam.trainerworkloadservice.enums.ActionType;
 import com.epam.trainerworkloadservice.exception.ResourceNotFoundException;
+import com.epam.trainerworkloadservice.exception.TrainerAlreadyBusyException;
 import com.epam.trainerworkloadservice.model.Trainer;
 import com.epam.trainerworkloadservice.model.TrainerMonthlyWorkload;
 import com.epam.trainerworkloadservice.repository.TrainerMonthlyWorkloadRepository;
@@ -19,6 +20,7 @@ public class TrainerWorkloadService {
 
     private final TrainerRepository trainerRepository;
     private final TrainerMonthlyWorkloadRepository trainerMonthlyWorkloadRepository;
+    private final int MAX_ALLOWED_MINUTES = 8 * 60;
 
     @Transactional
     public void updateTrainerWorkload(TrainerWorkloadDto trainerWorkloadDto) {
@@ -47,6 +49,10 @@ public class TrainerWorkloadService {
                     .month(month)
                     .totalDurationMinutes(0)
                     .build());
+
+            if (workload.getTotalDurationMinutes() + duration > MAX_ALLOWED_MINUTES) {
+                throw new TrainerAlreadyBusyException("Trainer exceeded daily limit");
+            }
 
             workload.setTotalDurationMinutes(workload.getTotalDurationMinutes() + duration);
             trainerMonthlyWorkloadRepository.save(workload);

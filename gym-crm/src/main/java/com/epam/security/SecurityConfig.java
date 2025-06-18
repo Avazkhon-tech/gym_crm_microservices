@@ -1,7 +1,10 @@
 package com.epam.security;
 
 
+import com.epam.dto.response.ErrorResponse;
 import com.epam.filter.TransactionIdFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +26,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    CustomUserDetailsService customUserDetailsService,
-                                                   JwtFilter jwtFilter) throws Exception {
+                                                   JwtFilter jwtFilter,
+                                                   ObjectMapper objectMapper) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize ->
@@ -44,6 +48,23 @@ public class SecurityConfig {
                 .userDetailsService(customUserDetailsService)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new TransactionIdFilter(), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
+                        .authenticationEntryPoint((
+                                        request,
+                                        response,
+                                        authenticationException) -> {
+                                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                    response.setContentType("application/json");
+                                    response.getWriter().write(objectMapper.writeValueAsString(new ErrorResponse("Unauthorized")));
+                                }
+                        )
+                        .accessDeniedHandler((request,
+                                              response,
+                                              accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write(objectMapper.writeValueAsString(new ErrorResponse("Forbidden")));
+                        }))
                 .build();
     }
 

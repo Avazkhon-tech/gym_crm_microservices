@@ -8,6 +8,7 @@ import com.epam.exception.AuthenticationException;
 import com.epam.exception.EntityDoesNotExistException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,11 +16,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(exception = {MethodArgumentNotValidException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public List<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         return ex.getBindingResult().getFieldErrors()
@@ -58,7 +60,7 @@ public class GlobalExceptionHandler {
             return ErrorResponse.detailed(
                     ErrorDetails.builder()
                             .message(String.format("Cannot parse '%s'",  invalidFormatException.getValue().toString()))
-                            .reason("Invalid data format")
+                            .reason(invalidFormatException.getOriginalMessage() + " at " + invalidFormatException.getPath().get(0).getFieldName() )
                             .build()
             );
         }
@@ -68,6 +70,12 @@ public class GlobalExceptionHandler {
                         .message("Malformed JSON request")
                         .reason(e.getMessage())
                         .build());
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidFormat(InvalidFormatException ex) {
+        return ResponseEntity.badRequest()
+                .body(Map.of("error", ex.getMessage()));
     }
 
 }
