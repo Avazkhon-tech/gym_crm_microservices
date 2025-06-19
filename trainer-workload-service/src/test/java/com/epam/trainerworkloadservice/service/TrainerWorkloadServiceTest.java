@@ -4,7 +4,7 @@ import com.epam.trainerworkloadservice.dto.TrainerWorkloadDto;
 import com.epam.trainerworkloadservice.enums.ActionType;
 import com.epam.trainerworkloadservice.exception.ResourceNotFoundException;
 import com.epam.trainerworkloadservice.model.Trainer;
-import com.epam.trainerworkloadservice.model.TrainerMonthlyWorkload;
+import com.epam.trainerworkloadservice.model.TrainerWorkload;
 import com.epam.trainerworkloadservice.repository.TrainerMonthlyWorkloadRepository;
 import com.epam.trainerworkloadservice.repository.TrainerRepository;
 import org.junit.jupiter.api.Test;
@@ -47,26 +47,25 @@ class TrainerWorkloadServiceTest {
         TrainerWorkloadDto dto = TrainerWorkloadDto.builder()
                 .actionType(ActionType.ADD)
                 .username("john_doe")
-                .trainingDate(LocalDate.of(2024, 5, 1))
+                .trainingDate(LocalDate.now())
                 .trainingDurationMinutes(30)
                 .build();
 
-        TrainerMonthlyWorkload existingWorkload = TrainerMonthlyWorkload.builder()
+        TrainerWorkload existingWorkload = TrainerWorkload.builder()
                 .trainer(trainer)
-                .year(2024)
-                .month(5)
-                .totalDurationMinutes(60)
+                .trainingDate(LocalDate.now())
+                .trainingDurationMinutes(60)
                 .build();
 
         when(trainerRepository.findById("john_doe")).thenReturn(Optional.of(trainer));
-        when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndYearAndMonth("john_doe", 2024, 5))
+        when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndTrainingDate("john_doe", LocalDate.now()))
                 .thenReturn(Optional.of(existingWorkload));
 
         // when
         trainerWorkloadService.updateTrainerWorkload(dto);
 
         // then
-        assertEquals(90, existingWorkload.getTotalDurationMinutes());
+        assertEquals(90, existingWorkload.getTrainingDurationMinutes());
         verify(trainerMonthlyWorkloadRepository).save(existingWorkload);
     }
 
@@ -80,7 +79,7 @@ class TrainerWorkloadServiceTest {
                 .firstname("Jane")
                 .lastname("Smith")
                 .isActive(true)
-                .trainingDate(LocalDate.of(2024, 5, 1))
+                .trainingDate(LocalDate.now())
                 .trainingDurationMinutes(45)
                 .build();
 
@@ -93,7 +92,7 @@ class TrainerWorkloadServiceTest {
 
         when(trainerRepository.findById(username)).thenReturn(Optional.empty());
         when(trainerRepository.save(any())).thenReturn(newTrainer);
-        when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndYearAndMonth(username, 2024, 5))
+        when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndTrainingDate(username, LocalDate.now()))
                 .thenReturn(Optional.empty());
 
         // when
@@ -117,26 +116,25 @@ class TrainerWorkloadServiceTest {
         TrainerWorkloadDto dto = TrainerWorkloadDto.builder()
                 .actionType(ActionType.DELETE)
                 .username("trainer_1")
-                .trainingDate(LocalDate.of(2024, 6, 1))
+                .trainingDate(LocalDate.now())
                 .trainingDurationMinutes(20)
                 .build();
 
-        TrainerMonthlyWorkload workload = TrainerMonthlyWorkload.builder()
+        TrainerWorkload workload = TrainerWorkload.builder()
                 .trainer(trainer)
-                .year(2024)
-                .month(6)
-                .totalDurationMinutes(50)
+                .trainingDate(LocalDate.now())
+                .trainingDurationMinutes(50)
                 .build();
 
         when(trainerRepository.findById("trainer_1")).thenReturn(Optional.of(trainer));
-        when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndYearAndMonth("trainer_1", 2024, 6))
+        when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndTrainingDate("trainer_1", LocalDate.now()))
                 .thenReturn(Optional.of(workload));
 
         // when
         trainerWorkloadService.updateTrainerWorkload(dto);
 
         // then
-        assertEquals(30, workload.getTotalDurationMinutes());
+        assertEquals(30, workload.getTrainingDurationMinutes());
         verify(trainerMonthlyWorkloadRepository).save(workload);
     }
 
@@ -154,12 +152,12 @@ class TrainerWorkloadServiceTest {
         TrainerWorkloadDto dto = TrainerWorkloadDto.builder()
                 .actionType(ActionType.DELETE)
                 .username(username)
-                .trainingDate(LocalDate.of(2024, 7, 1))
+                .trainingDate(LocalDate.now())
                 .trainingDurationMinutes(20)
                 .build();
 
         when(trainerRepository.findById(username)).thenReturn(Optional.of(trainer));
-        when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndYearAndMonth(username, 2024, 7))
+        when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndTrainingDate(username, LocalDate.now()))
                 .thenReturn(Optional.empty());
 
         // expect
@@ -179,26 +177,25 @@ class TrainerWorkloadServiceTest {
         TrainerWorkloadDto dto = TrainerWorkloadDto.builder()
                 .actionType(ActionType.DELETE)
                 .username("trainer_excess")
-                .trainingDate(LocalDate.of(2024, 8, 1))
+                .trainingDate(LocalDate.now())
                 .trainingDurationMinutes(100)
                 .build();
 
-        TrainerMonthlyWorkload workload = TrainerMonthlyWorkload.builder()
+        TrainerWorkload workload = TrainerWorkload.builder()
                 .trainer(trainer)
-                .year(2024)
-                .month(8)
-                .totalDurationMinutes(50)
+                .trainingDate(LocalDate.now())
+                .trainingDurationMinutes(50)
                 .build();
 
         when(trainerRepository.findById("trainer_excess")).thenReturn(Optional.of(trainer));
-        when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndYearAndMonth("trainer_excess", 2024, 8))
+        when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndTrainingDate("trainer_excess", LocalDate.now()))
                 .thenReturn(Optional.of(workload));
 
         // when
         trainerWorkloadService.updateTrainerWorkload(dto);
 
         // then
-        assertEquals(50, workload.getTotalDurationMinutes()); // unchanged
+        assertEquals(50, workload.getTrainingDurationMinutes());
         verify(trainerMonthlyWorkloadRepository).save(workload);
     }
 }

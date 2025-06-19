@@ -12,13 +12,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainerMonthlyWorkload {
+public class TrainerWorkload {
 
     @Id
     @GeneratedValue
@@ -28,12 +30,9 @@ public class TrainerMonthlyWorkload {
     @JoinColumn(name = "trainer_username")
     private Trainer trainer;
 
-    @Column(nullable = false, name = "`year`")
-    private int year;
-
-    @Column(nullable = false, name = "`month`")
-    private int month;
+    @Column(nullable = false)
+    private LocalDate trainingDate;
 
     @Column(nullable = false)
-    private int totalDurationMinutes;
+    private int trainingDurationMinutes;
 }
