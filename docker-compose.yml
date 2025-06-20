@@ -51,6 +51,19 @@ services:
       - SPRING_ACTIVEMQ_USER=${ACTIVEMQ_USERNAME}
       - SPRING_ACTIVEMQ_PASSWORD=${ACTIVEMQ_PASSWORD}
 
+  mongo:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - microservices-net
+
+volumes:
+  mongodb_data:
+
 networks:
   microservices-net:
     driver: bridge
