@@ -80,8 +80,8 @@ public class TrainingService {
 
         TrainerWorkloadDto trainerWorkloadDto = TrainerWorkloadDto.builder()
                 .username(trainingCreateDtoDto.trainerUsername())
-                .firstname(trainingCreateDtoDto.trainerUsername())
-                .lastname(trainingCreateDtoDto.trainerUsername())
+                .firstname(trainer.getUser().getFirstname())
+                .lastname(trainer.getUser().getLastname())
                 .isActive(trainer.getUser().getIsActive())
                 .trainingDate(trainingCreateDtoDto.trainingDate())
                 .trainingDurationMinutes(trainingCreateDtoDto.trainingDurationMinutes())

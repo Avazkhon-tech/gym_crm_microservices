@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: gym-crm
+
+  datasource:
+    url: jdbc:h2:mem:gym_crm
+    username: sa
+
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+
+  sql:
+    init:
+      mode: always
+
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    packages:
+      trust-all: true
+
+server:
+  servlet:
+    context-path: /api/v1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+brute:
+  force:
+    login:
+      max:
+        attempts: 3
+      locked:
+        minutes: 5
+
+jwt:
+  secret: aslfkjaslkdnrfuioqenrkqndlvjdnavkjdsnfldkjsn
+  expiration:
+    time: 900000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

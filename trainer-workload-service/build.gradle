@@ -68,17 +68,9 @@ dependencies {
     implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: jakartaValidationVersion
     implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: jakartaAnnotationVersion
 
-    // hibernate
-    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: hibernateValidatorVersion
-
-    // circuit breaker
-    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    runtimeOnly 'org.postgresql:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
 
 }
 dependencyManagement {

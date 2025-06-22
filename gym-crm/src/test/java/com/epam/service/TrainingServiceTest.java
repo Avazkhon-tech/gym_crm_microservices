@@ -9,7 +9,11 @@ import com.epam.enums.ActionType;
 import com.epam.exception.EntityDoesNotExistException;
 import com.epam.mapper.TrainingMapper;
 import com.epam.messaging.MessageSender;
-import com.epam.model.*;
+import com.epam.model.Trainee;
+import com.epam.model.Trainer;
+import com.epam.model.Training;
+import com.epam.model.TrainingType;
+import com.epam.model.User;
 import com.epam.repository.TraineeRepository;
 import com.epam.repository.TrainerRepository;
 import com.epam.repository.TrainingRepository;
@@ -30,10 +34,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.instancio.Select.field;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
