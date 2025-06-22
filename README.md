@@ -64,9 +64,8 @@ Use this list when updating a trainee's assigned trainers:
 ```
 ## Accessing the System
 - You can view the API documentation at [Swagger UI](http://localhost:8080/api/v1/swagger-ui/index.html#).
-- Get h2 console for trainer workload service at [H2 console](http://localhost:8081/api/v1/h2-console)
-  * database name is workloaddb
 - You can access ActiveMQ admin panel using `admin` as both username and password at [ActiveMQ](http://localhost:8161/admin/queues.jsp)
+- You can access Mongo express using `user` as both username and password at [Mongo Express](http://localhost:8000)
 
 To observe the message broker in action, turn off the trainer workload service. 
 Once you restart it, the service will consume requests from the queue. 
