@@ -52,12 +52,13 @@ class TrainerWorkloadServiceTest {
                 .build();
 
         TrainerWorkload existingWorkload = TrainerWorkload.builder()
-                .trainer(trainer)
+                .trainerUsername(trainer.getUsername()
+                )
                 .trainingDate(LocalDate.now())
                 .trainingDurationMinutes(60)
                 .build();
 
-        when(trainerRepository.findById("john_doe")).thenReturn(Optional.of(trainer));
+        when(trainerRepository.findByUsername("john_doe")).thenReturn(Optional.of(trainer));
         when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndTrainingDate("john_doe", LocalDate.now()))
                 .thenReturn(Optional.of(existingWorkload));
 
@@ -90,7 +91,7 @@ class TrainerWorkloadServiceTest {
                 .isActive(true)
                 .build();
 
-        when(trainerRepository.findById(username)).thenReturn(Optional.empty());
+        when(trainerRepository.findByUsername(username)).thenReturn(Optional.empty());
         when(trainerRepository.save(any())).thenReturn(newTrainer);
         when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndTrainingDate(username, LocalDate.now()))
                 .thenReturn(Optional.empty());
@@ -121,12 +122,12 @@ class TrainerWorkloadServiceTest {
                 .build();
 
         TrainerWorkload workload = TrainerWorkload.builder()
-                .trainer(trainer)
+                .trainerUsername(trainer.getUsername())
                 .trainingDate(LocalDate.now())
                 .trainingDurationMinutes(50)
                 .build();
 
-        when(trainerRepository.findById("trainer_1")).thenReturn(Optional.of(trainer));
+        when(trainerRepository.findByUsername("trainer_1")).thenReturn(Optional.of(trainer));
         when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndTrainingDate("trainer_1", LocalDate.now()))
                 .thenReturn(Optional.of(workload));
 
@@ -156,7 +157,7 @@ class TrainerWorkloadServiceTest {
                 .trainingDurationMinutes(20)
                 .build();
 
-        when(trainerRepository.findById(username)).thenReturn(Optional.of(trainer));
+        when(trainerRepository.findByUsername(username)).thenReturn(Optional.of(trainer));
         when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndTrainingDate(username, LocalDate.now()))
                 .thenReturn(Optional.empty());
 
@@ -182,12 +183,12 @@ class TrainerWorkloadServiceTest {
                 .build();
 
         TrainerWorkload workload = TrainerWorkload.builder()
-                .trainer(trainer)
+                .trainerUsername(trainer.getUsername())
                 .trainingDate(LocalDate.now())
                 .trainingDurationMinutes(50)
                 .build();
 
-        when(trainerRepository.findById("trainer_excess")).thenReturn(Optional.of(trainer));
+        when(trainerRepository.findByUsername("trainer_excess")).thenReturn(Optional.of(trainer));
         when(trainerMonthlyWorkloadRepository.findByTrainerUsernameAndTrainingDate("trainer_excess", LocalDate.now()))
                 .thenReturn(Optional.of(workload));
 

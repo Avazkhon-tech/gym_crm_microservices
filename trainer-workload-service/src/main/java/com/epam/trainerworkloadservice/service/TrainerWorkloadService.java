@@ -8,7 +8,6 @@ import com.epam.trainerworkloadservice.model.Trainer;
 import com.epam.trainerworkloadservice.model.TrainerWorkload;
 import com.epam.trainerworkloadservice.repository.TrainerMonthlyWorkloadRepository;
 import com.epam.trainerworkloadservice.repository.TrainerRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +22,11 @@ public class TrainerWorkloadService {
     private final TrainerMonthlyWorkloadRepository trainerMonthlyWorkloadRepository;
     private static final int MAX_ALLOWED_MINUTES = 8 * 60;
 
-    @Transactional
+
     public void updateTrainerWorkload(TrainerWorkloadDto trainerWorkloadDto) {
 
         // find the trainer or else save it as new
-        Trainer trainer = trainerRepository.findById(trainerWorkloadDto.username())
+        Trainer trainer = trainerRepository.findByUsername(trainerWorkloadDto.username())
                 .orElseGet(() -> trainerRepository.save(Trainer.builder()
                         .username(trainerWorkloadDto.username())
                         .firstname(trainerWorkloadDto.firstname())
@@ -44,7 +43,7 @@ public class TrainerWorkloadService {
         // add the minutes
         if (trainerWorkloadDto.actionType() == ActionType.ADD) {
             TrainerWorkload workload = optionalWorkload.orElseGet(() -> TrainerWorkload.builder()
-                    .trainer(trainer)
+                    .trainerUsername(trainer.getUsername())
                     .trainingDate(trainingDate)
                     .trainingDurationMinutes(0)
                     .build());

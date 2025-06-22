@@ -1,20 +1,19 @@
 package com.epam.trainerworkloadservice.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
-@Entity
+@Document(collection = "trainer_workloads")
+@CompoundIndex(name = "trainerUsername-trainingdate", def = "{'trainerUsername': 1, 'trainingDate': 1}")
 @Getter
 @Setter
 @Builder
@@ -23,16 +22,11 @@ import java.time.LocalDate;
 public class TrainerWorkload {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "trainer_username")
-    private Trainer trainer;
+    private String trainerUsername;
 
-    @Column(nullable = false)
     private LocalDate trainingDate;
 
-    @Column(nullable = false)
     private int trainingDurationMinutes;
 }

@@ -1,6 +1,11 @@
 package com.epam.trainerworkloadservice.repository;
 
 import com.epam.trainerworkloadservice.model.Trainer;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface TrainerRepository extends JpaRepository<Trainer, String> {}
+import java.util.Optional;
+
+public interface TrainerRepository extends MongoRepository<Trainer, String> {
+
+    Optional<Trainer> findByUsername(String username);
+}
