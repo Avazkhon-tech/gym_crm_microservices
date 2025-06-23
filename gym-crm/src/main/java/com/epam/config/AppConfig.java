@@ -1,20 +1,13 @@
 package com.epam.config;
 
-import com.epam.serialization.CustomStringDeserializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -28,22 +21,7 @@ import java.util.List;
 @Configuration
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
-@ComponentScan(basePackages = {"com.epam"})
 public class AppConfig {
-
-    @Bean
-    @Primary
-    public ObjectMapper objectMapper() {
-
-        SimpleModule module = new SimpleModule();
-
-        module.addDeserializer(String.class, new CustomStringDeserializer());
-
-        return new ObjectMapper()
-                .registerModule(new JavaTimeModule())
-                .registerModule(module)
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
