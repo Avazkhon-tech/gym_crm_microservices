@@ -1,6 +1,7 @@
 package com.epam.security;
 
 import com.epam.dto.response.ResponseMessage;
+import com.epam.utility.PublicEndpoints;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -33,6 +34,11 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader("Authorization");
         String username = null;
+
+        if (PublicEndpoints.shouldSkip(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
