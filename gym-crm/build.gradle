@@ -19,82 +19,63 @@ repositories {
 }
 
 ext {
-    log4jVersion = '2.24.3'
     lombokVersion = '1.18.36'
-    jakartaAnnotationVersion = '2.1.1'
-    jakartaValidationVersion = '3.1.0'
     hibernateValidatorVersion = '8.0.1.Final'
     mapstructVersion = '1.6.3'
     commonsLangVersion = '3.17.0'
     instancioVersion = '5.4.1'
     springDocVersion = '2.8.6'
     jwtVersion = '0.12.6'
-    springCloudOpenFeign = '4.2.1'
-    springEurekaClient = '4.2.1'
     springCloudVersion = "2024.0.1"
-    circuitBreaker = '2.3.0'
-    fasterXml = '2.19.0'
-
 }
 
 dependencies {
-
-    // spring boot
+    // === Core Spring Boot Starters ===
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.4.4'
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: springCloudOpenFeign
-
-    // data type support
-    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: fasterXml
-
-
-    // ActiveMQ
     implementation 'org.springframework.boot:spring-boot-starter-activemq'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    // eureka
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: springEurekaClient
-
-
-    // prometheus
-    implementation 'io.micrometer:micrometer-registry-prometheus'
-
-    // circuit breaker
+    // === Cloud / Microservices ===
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 
-    // database
+    // === API Documentation ===
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
+
+    // === Observability / Monitoring ===
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // === Database Drivers ===
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    // Lombok
+    // === Validation / Jakarta ===
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // === Lombok ===
     implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
 
-    // Jakarta API
-    implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: jakartaAnnotationVersion
-    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: jakartaValidationVersion
-    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: hibernateValidatorVersion
-
-    // MapStruct
+    // === Mapping / DTO Conversion ===
     implementation group: 'org.mapstruct', name: 'mapstruct', version: mapstructVersion
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: mapstructVersion
 
-    // Apache Commons
+    // === Utility Libraries ===
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
 
-
-    // test
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testImplementation group: 'org.instancio', name: 'instancio-junit', version: instancioVersion
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-
-    // jwt
+    // === JWT ===
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: jwtVersion
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: jwtVersion
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: jwtVersion
+
+    // === Testing ===
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation group: 'org.instancio', name: 'instancio-junit', version: instancioVersion
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 jacoco {
