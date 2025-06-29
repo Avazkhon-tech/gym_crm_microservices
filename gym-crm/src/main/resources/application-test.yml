@@ -6,3 +6,17 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+
+  sql:
+    init:
+      mode: always
+
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+
+logging:
+  level:
+    root: warn

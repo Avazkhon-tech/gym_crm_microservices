@@ -71,11 +71,23 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: jwtVersion
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: jwtVersion
 
-    // === Testing ===
+    // == Cucumber ==
+    testImplementation platform('io.cucumber:cucumber-bom:7.23.0')
+    testImplementation 'io.cucumber:cucumber-java'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine'
+    testImplementation 'io.cucumber:cucumber-spring'
+
+    // === Testing Junit
+    testImplementation platform('org.junit:junit-bom:5.13.2')
+    testImplementation 'org.junit.platform:junit-platform-suite'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // === Testing starters ===
+    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation group: 'org.instancio', name: 'instancio-junit', version: instancioVersion
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 jacoco {

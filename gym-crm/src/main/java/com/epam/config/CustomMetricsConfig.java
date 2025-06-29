@@ -5,9 +5,11 @@ import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.lang.management.ManagementFactory;
 
+@Profile("!test")
 @Configuration
 public class CustomMetricsConfig {
 

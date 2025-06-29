@@ -3,13 +3,14 @@ package com.epam.service;
 import com.epam.dto.auth.LoginDto;
 import com.epam.dto.trainee.TraineeProfileDto;
 import com.epam.dto.trainee.TraineeProfileUpdateDto;
-import com.epam.dto.trainee.TraineeRegistrationDto;
+import com.epam.dto.trainee.TrainerRegistrationDto;
 import com.epam.dto.trainee.TraineeTrainerDto;
 import com.epam.exception.EntityDoesNotExistException;
 import com.epam.mapper.TraineeMapper;
 import com.epam.mapper.TrainerMapper;
 import com.epam.model.Trainee;
 import com.epam.model.Trainer;
+import com.epam.repository.RefreshTokenRepository;
 import com.epam.repository.TraineeRepository;
 import com.epam.repository.TrainerRepository;
 import jakarta.transaction.Transactional;
@@ -28,15 +29,16 @@ public class TraineeService {
     private final TrainerMapper trainerMapper;
     private final TraineeRepository traineeRepository;
     private final TrainerRepository trainerRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
 
     @Transactional
-    public LoginDto createTrainee(TraineeRegistrationDto traineeRegistrationDto) {
+    public LoginDto createTrainee(TrainerRegistrationDto trainerRegistrationDto) {
 
-        Trainee trainee = traineeMapper.toEntity(traineeRegistrationDto);
+        Trainee trainee = traineeMapper.toEntity(trainerRegistrationDto);
 
         trainee.getUser().setUsername(
-                userService.getUniqueUsername(traineeRegistrationDto.firstname(), traineeRegistrationDto.lastname()));
+                userService.getUniqueUsername(trainerRegistrationDto.firstname(), trainerRegistrationDto.lastname()));
 
         trainee.getUser().setPassword(userService.generatePassword());
 
@@ -69,6 +71,7 @@ public class TraineeService {
     public void deleteTrainee(String username) {
         Trainee trainee = traineeRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityDoesNotExistException(username, "username", "Trainee"));
+        refreshTokenRepository.deleteByUserId(trainee.getUser().getId());
         traineeRepository.delete(trainee);
     }
 

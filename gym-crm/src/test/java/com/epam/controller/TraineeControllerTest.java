@@ -3,7 +3,7 @@ package com.epam.controller;
 import com.epam.dto.auth.LoginDto;
 import com.epam.dto.trainee.TraineeProfileDto;
 import com.epam.dto.trainee.TraineeProfileUpdateDto;
-import com.epam.dto.trainee.TraineeRegistrationDto;
+import com.epam.dto.trainee.TrainerRegistrationDto;
 import com.epam.dto.trainee.TraineeTrainerDto;
 import com.epam.exception.EntityDoesNotExistException;
 import com.epam.security.TestSecurityConfig;
@@ -54,16 +54,16 @@ class TraineeControllerTest {
 
     @Test
     void shouldCreateTraineeSuccessfully() throws Exception {
-        TraineeRegistrationDto traineeRegistrationDto = Instancio.of(TraineeRegistrationDto.class)
-                .set(Select.field(TraineeRegistrationDto::dateOfBirth), LocalDate.now().minusYears(20))
+        TrainerRegistrationDto trainerRegistrationDto = Instancio.of(TrainerRegistrationDto.class)
+                .set(Select.field(TrainerRegistrationDto::dateOfBirth), LocalDate.now().minusYears(20))
                 .create();
         LoginDto loginDto = Instancio.create(LoginDto.class);
 
-        when(traineeService.createTrainee(any(TraineeRegistrationDto.class))).thenReturn(loginDto);
+        when(traineeService.createTrainee(any(TrainerRegistrationDto.class))).thenReturn(loginDto);
 
         mockMvc.perform(post("/trainees/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(traineeRegistrationDto)))
+                        .content(objectMapper.writeValueAsString(trainerRegistrationDto)))
                 .andExpect(status().isOk());
     }
 

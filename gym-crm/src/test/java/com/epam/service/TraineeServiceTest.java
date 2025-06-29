@@ -3,7 +3,7 @@ package com.epam.service;
 import com.epam.dto.auth.LoginDto;
 import com.epam.dto.trainee.TraineeProfileDto;
 import com.epam.dto.trainee.TraineeProfileUpdateDto;
-import com.epam.dto.trainee.TraineeRegistrationDto;
+import com.epam.dto.trainee.TrainerRegistrationDto;
 import com.epam.dto.trainee.TraineeTrainerDto;
 import com.epam.exception.EntityDoesNotExistException;
 import com.epam.mapper.TraineeMapper;
@@ -11,6 +11,7 @@ import com.epam.mapper.TrainerMapper;
 import com.epam.model.Trainee;
 import com.epam.model.Trainer;
 import com.epam.model.User;
+import com.epam.repository.RefreshTokenRepository;
 import com.epam.repository.TraineeRepository;
 import com.epam.repository.TrainerRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +49,9 @@ class TraineeServiceTest {
     private TrainerRepository trainerRepository;
 
     @Mock
+    private RefreshTokenRepository refreshTokenRepository;
+
+    @Mock
     private UserService userService;
 
     @Spy
@@ -60,7 +64,7 @@ class TraineeServiceTest {
     private TraineeService traineeService;
 
     private TraineeProfileDto traineeProfileDto;
-    private TraineeRegistrationDto traineeRegistrationDto;
+    private TrainerRegistrationDto trainerRegistrationDto;
     private Trainee newTrainee;
     private Trainee savedTrainee;
 
@@ -74,7 +78,7 @@ class TraineeServiceTest {
                 .lastname("Valiyev")
                 .build();
 
-        traineeRegistrationDto = TraineeRegistrationDto.builder()
+        trainerRegistrationDto = TrainerRegistrationDto.builder()
                 .dateOfBirth(LocalDate.now().minusYears(20))
                 .address("Tashkent")
                 .firstname("Ahmad")
@@ -114,12 +118,12 @@ class TraineeServiceTest {
         @Test
         void shouldCreateTraineeSuccessfully() {
 
-            when(traineeMapper.toEntity(traineeRegistrationDto)).thenReturn(newTrainee);
+            when(traineeMapper.toEntity(trainerRegistrationDto)).thenReturn(newTrainee);
             when(userService.getUniqueUsername("Ahmad", "Valiyev")).thenReturn("Ahmad.Valiyev");
             when(userService.generatePassword()).thenReturn("password");
             when(traineeRepository.save(newTrainee)).thenReturn(savedTrainee);
 
-            LoginDto result = traineeService.createTrainee(traineeRegistrationDto);
+            LoginDto result = traineeService.createTrainee(trainerRegistrationDto);
 
             assertNotNull(result);
             assertEquals("Ahmad.Valiyev", result.username());

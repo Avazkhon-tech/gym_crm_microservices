@@ -7,7 +7,7 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-public record TraineeRegistrationDto(
+public record TrainerRegistrationDto(
 
         @NotBlank(message = "Firstname field cannot be empty")
         String firstname,
