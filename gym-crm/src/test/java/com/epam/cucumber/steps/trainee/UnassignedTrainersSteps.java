@@ -1,6 +1,6 @@
 package com.epam.cucumber.steps.trainee;
 
-import com.epam.cucumber.steps.CommonSteps;
+import com.epam.cucumber.steps.ResponseSteps;
 import com.epam.dto.trainee.TraineeTrainerDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +29,7 @@ public class UnassignedTrainersSteps {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private CommonSteps commonSteps;
+    private ResponseSteps responseSteps;
 
     private MvcResult result;
 
@@ -50,7 +50,7 @@ public class UnassignedTrainersSteps {
                 .andReturn();
 
         String json = result.getResponse().getContentAsString();
-        commonSteps.setResult(result);
+        responseSteps.setResult(result);
         if (!json.isBlank()) {
             trainers = objectMapper.readValue(json, new TypeReference<>() {});
         }

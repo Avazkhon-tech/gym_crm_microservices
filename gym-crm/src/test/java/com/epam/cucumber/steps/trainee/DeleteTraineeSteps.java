@@ -1,6 +1,6 @@
 package com.epam.cucumber.steps.trainee;
 
-import com.epam.cucumber.steps.CommonSteps;
+import com.epam.cucumber.steps.ResponseSteps;
 import com.epam.repository.TraineeRepository;
 import com.epam.dto.response.ResponseMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +23,7 @@ public class DeleteTraineeSteps {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private CommonSteps commonSteps;
+    private ResponseSteps responseSteps;
 
     @Autowired
     private TraineeRepository traineeRepository;
@@ -46,7 +46,7 @@ public class DeleteTraineeSteps {
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        commonSteps.setResult(result);
+        responseSteps.setResult(result);
 
         String responseBody = result.getResponse().getContentAsString();
         if (!responseBody.isBlank()) {

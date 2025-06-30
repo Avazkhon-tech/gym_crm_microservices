@@ -1,26 +1,15 @@
 package com.epam.cucumber.steps.trainer;
 
-import com.epam.cucumber.steps.CommonSteps;
+import com.epam.cucumber.steps.ResponseSteps;
 import com.epam.dto.trainer.TrainerProfileDto;
 import com.epam.dto.trainer.TrainerProfileUpdateDto;
-import com.epam.model.Trainer;
-import com.epam.model.TrainingType;
-import com.epam.model.User;
 import com.epam.repository.TrainerRepository;
-import com.epam.repository.TrainingTypeRepository;
-import com.epam.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,7 +28,7 @@ public class TrainerUpdateProfileSteps {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private CommonSteps commonSteps;
+    private ResponseSteps responseSteps;
 
     private String username;
     private TrainerProfileUpdateDto updateDto;
@@ -71,7 +60,7 @@ public class TrainerUpdateProfileSteps {
                         .content(json))
                 .andReturn();
 
-        commonSteps.setResult(result);
+        responseSteps.setResult(result);
 
         String body = result.getResponse().getContentAsString();
         responseDto = objectMapper.readValue(body, TrainerProfileDto.class);

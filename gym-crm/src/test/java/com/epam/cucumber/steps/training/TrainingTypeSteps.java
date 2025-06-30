@@ -1,6 +1,6 @@
 package com.epam.cucumber.steps.training;
 
-import com.epam.cucumber.steps.CommonSteps;
+import com.epam.cucumber.steps.ResponseSteps;
 import com.epam.model.TrainingType;
 import com.epam.repository.TrainingTypeRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -25,7 +25,7 @@ public class TrainingTypeSteps {
     private TrainingTypeRepository trainingTypeRepository;
 
     @Autowired
-    private CommonSteps commonSteps;
+    private ResponseSteps responseSteps;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -39,7 +39,7 @@ public class TrainingTypeSteps {
         result = mockMvc.perform(get(path).contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        commonSteps.setResult(result);
+        responseSteps.setResult(result);
 
         String content = result.getResponse().getContentAsString();
         responseList = objectMapper.readValue(content, new TypeReference<>() {});

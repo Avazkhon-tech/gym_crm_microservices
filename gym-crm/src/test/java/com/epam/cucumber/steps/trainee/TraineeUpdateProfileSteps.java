@@ -1,6 +1,6 @@
 package com.epam.cucumber.steps.trainee;
 
-import com.epam.cucumber.steps.CommonSteps;
+import com.epam.cucumber.steps.ResponseSteps;
 import com.epam.dto.trainee.TraineeProfileDto;
 import com.epam.dto.trainee.TraineeProfileUpdateDto;
 import com.epam.model.Trainee;
@@ -9,7 +9,6 @@ import com.epam.repository.TraineeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -33,7 +32,7 @@ public class TraineeUpdateProfileSteps {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private CommonSteps commonSteps;
+    private ResponseSteps responseSteps;
 
     @Autowired
     private TraineeRepository traineeRepository;
@@ -95,7 +94,7 @@ public class TraineeUpdateProfileSteps {
                         .content(json))
                 .andReturn();
 
-        commonSteps.setResult(result);
+        responseSteps.setResult(result);
 
         String responseBody = result.getResponse().getContentAsString();
         responseDto = objectMapper.readValue(responseBody, TraineeProfileDto.class);

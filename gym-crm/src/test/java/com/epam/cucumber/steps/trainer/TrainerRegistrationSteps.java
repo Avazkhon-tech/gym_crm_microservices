@@ -1,6 +1,6 @@
 package com.epam.cucumber.steps.trainer;
 
-import com.epam.cucumber.steps.CommonSteps;
+import com.epam.cucumber.steps.ResponseSteps;
 import com.epam.dto.auth.LoginDto;
 import com.epam.dto.trainer.TrainerRegistrationDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,7 +25,7 @@ public class TrainerRegistrationSteps {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private CommonSteps commonSteps;
+    private ResponseSteps responseSteps;
 
     private TrainerRegistrationDto traineeDto;
     private MvcResult result;
@@ -51,7 +49,7 @@ public class TrainerRegistrationSteps {
                         .content(requestJson))
                 .andReturn();
 
-        commonSteps.setResult(result);
+        responseSteps.setResult(result);
 
         String responseBody = result.getResponse().getContentAsString();
         loginDto = objectMapper.readValue(responseBody, LoginDto.class);

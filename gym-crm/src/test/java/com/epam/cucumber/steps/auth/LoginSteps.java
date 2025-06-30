@@ -1,83 +1,73 @@
 package com.epam.cucumber.steps.auth;
 
-import com.epam.cucumber.steps.CommonSteps;
+import com.epam.cucumber.steps.ResponseSteps;
 import com.epam.dto.auth.LoginDto;
 import com.epam.dto.auth.Token;
-import com.epam.dto.response.ResponseMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.en.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 
 public class LoginSteps {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    @Autowired
-    private CommonSteps commonSteps;
+    private final ResponseSteps responseSteps;
+
+    public LoginSteps(ResponseSteps responseSteps, MockMvc mockMvc, ObjectMapper objectMapper) {
+        this.responseSteps = responseSteps;
+        this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
+    }
 
     private LoginDto loginDto;
-    private MvcResult result;
+
 
     @Given("a user {string} with password {string}")
     public void a_user_with_password_exists(String username, String rawPassword) {
         this.loginDto = new LoginDto(username, rawPassword);
     }
 
-    // Successful login
-    @When("the user posts valid credentials to {string}")
+    @When("the user posts credentials to {string}")
     public void the_client_posts_valid_credentials_to_login(String path) throws Exception {
         String json = objectMapper.writeValueAsString(loginDto);
 
-        result = mockMvc.perform(post(path)
+        MvcResult result = mockMvc.perform(post(path)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andReturn();
 
-        commonSteps.setResult(result);
+        responseSteps.setResult(result);
     }
 
     @And("the body contains a non‑blank JWT and refresh token")
     public void the_body_contains_tokens() throws Exception {
-        String bodyJson = result.getResponse().getContentAsString();
+        String bodyJson = responseSteps.getResult().getResponse().getContentAsString();
         Token token = objectMapper.readValue(bodyJson, Token.class);
+
+        System.out.println("with token: " + responseSteps.getResult().getResponse().getContentAsString());
 
         assertThat(token).isNotNull();
         assertThat(token.accessToken()).isNotBlank();
         assertThat(token.refreshToken()).isNotBlank();
     }
 
-    // Failed login
-    @When("the user posts invalid credentials to {string}")
-    public void the_client_posts_invalid_credentials_to_login(String path) throws Exception {
-        LoginDto invalidDto = new LoginDto("aziz.murodov", "invalid");
-        String json = objectMapper.writeValueAsString(invalidDto);
-
-        result = mockMvc.perform(post(path)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andReturn();
-
-        commonSteps.setResult(result);
-    }
-
-    @And("the body contains contains a message {string}")
-    public void the_body_contains_a_message(String expectedMessage) throws Exception {
-        String bodyJson = result.getResponse().getContentAsString();
-        ResponseMessage message = objectMapper.readValue(bodyJson, ResponseMessage.class);
-
-        assertThat(message).isNotNull();
-        assertEquals(expectedMessage, message.message());
+    @And("the body contains contains a list of errors")
+    public void theBodyContainsContainsAListOfErrors() throws Exception {
+        String contentAsString = responseSteps.getResult().getResponse().getContentAsString();
+        assertThat(contentAsString).isNotBlank();
+        List<?> list = objectMapper.readValue(contentAsString, List.class);
+        assertThat(list).isNotEmpty();
     }
 }

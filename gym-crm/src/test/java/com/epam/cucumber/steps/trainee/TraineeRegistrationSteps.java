@@ -1,6 +1,6 @@
 package com.epam.cucumber.steps.trainee;
 
-import com.epam.cucumber.steps.CommonSteps;
+import com.epam.cucumber.steps.ResponseSteps;
 import com.epam.dto.auth.LoginDto;
 import com.epam.dto.trainee.TrainerRegistrationDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,7 @@ public class TraineeRegistrationSteps {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private CommonSteps commonSteps;
+    private ResponseSteps responseSteps;
 
     private TrainerRegistrationDto traineeDto;
     private MvcResult result;
@@ -52,7 +52,7 @@ public class TraineeRegistrationSteps {
                         .content(requestJson))
                 .andReturn();
 
-        commonSteps.setResult(result);
+        responseSteps.setResult(result);
 
         String responseBody = result.getResponse().getContentAsString();
         loginDto = objectMapper.readValue(responseBody, LoginDto.class);
