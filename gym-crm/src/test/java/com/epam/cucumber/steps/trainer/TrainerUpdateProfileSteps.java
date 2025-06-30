@@ -4,12 +4,15 @@ import com.epam.cucumber.steps.ResponseSteps;
 import com.epam.dto.trainer.TrainerProfileDto;
 import com.epam.dto.trainer.TrainerProfileUpdateDto;
 import com.epam.repository.TrainerRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.io.UnsupportedEncodingException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,8 +35,6 @@ public class TrainerUpdateProfileSteps {
 
     private String username;
     private TrainerProfileUpdateDto updateDto;
-    private TrainerProfileDto responseDto;
-    private MvcResult result;
 
 
     @Given("a trainer to update with username {string} exists")
@@ -54,20 +55,20 @@ public class TrainerUpdateProfileSteps {
 
         String json = objectMapper.writeValueAsString(updateDto);
 
-        result = mockMvc.perform(put("/trainers")
+        MvcResult result = mockMvc.perform(put("/trainers")
                         .with(user(username).roles("TRAINER"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andReturn();
 
         responseSteps.setResult(result);
-
-        String body = result.getResponse().getContentAsString();
-        responseDto = objectMapper.readValue(body, TrainerProfileDto.class);
     }
 
     @And("the response for trainer profile update request contains updated info")
-    public void the_response_contains_updated_info() {
+    public void the_response_contains_updated_info() throws UnsupportedEncodingException, JsonProcessingException {
+        String bodyJson = responseSteps.getResult().getResponse().getContentAsString();
+        TrainerProfileDto responseDto = objectMapper.readValue(bodyJson, TrainerProfileDto.class);
+
         assertThat(responseDto).isNotNull();
         assertEquals(updateDto.firstname(), responseDto.firstname());
         assertEquals(updateDto.lastname(), responseDto.lastname());

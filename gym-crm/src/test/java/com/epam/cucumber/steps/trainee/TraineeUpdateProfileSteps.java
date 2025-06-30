@@ -6,15 +6,18 @@ import com.epam.dto.trainee.TraineeProfileUpdateDto;
 import com.epam.model.Trainee;
 import com.epam.model.User;
 import com.epam.repository.TraineeRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
+import org.bouncycastle.asn1.ocsp.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,22 +28,24 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 public class TraineeUpdateProfileSteps {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    @Autowired
-    private ResponseSteps responseSteps;
+    private final ResponseSteps responseSteps;
 
-    @Autowired
-    private TraineeRepository traineeRepository;
+    private final TraineeRepository traineeRepository;
+
+    public TraineeUpdateProfileSteps(MockMvc mockMvc, ObjectMapper objectMapper, ResponseSteps responseSteps, TraineeRepository traineeRepository) {
+        this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
+        this.responseSteps = responseSteps;
+        this.traineeRepository = traineeRepository;
+    }
 
     private String username;
     private TraineeProfileUpdateDto updateDto;
     private TraineeProfileDto responseDto;
-    private MvcResult result;
     private Trainee trainee;
 
     @Before
@@ -88,7 +93,7 @@ public class TraineeUpdateProfileSteps {
 
         String json = objectMapper.writeValueAsString(updateDto);
 
-        result = mockMvc.perform(put("/trainees/" + username)
+        MvcResult result = mockMvc.perform(put("/trainees/" + username)
                         .with(user(username).roles("TRAINER"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
@@ -96,12 +101,14 @@ public class TraineeUpdateProfileSteps {
 
         responseSteps.setResult(result);
 
-        String responseBody = result.getResponse().getContentAsString();
-        responseDto = objectMapper.readValue(responseBody, TraineeProfileDto.class);
+
     }
 
     @And("the response contains updated info")
-    public void the_response_contains_updated_fields() {
+    public void the_response_contains_updated_fields() throws UnsupportedEncodingException, JsonProcessingException {
+        String responseBody = responseSteps.getResult().getResponse().getContentAsString();
+        responseDto = objectMapper.readValue(responseBody, TraineeProfileDto.class);
+
         assertThat(responseDto).isNotNull();
         assertEquals(updateDto.address(), responseDto.address());
         assertEquals(updateDto.dateOfBirth(), responseDto.dateOfBirth());

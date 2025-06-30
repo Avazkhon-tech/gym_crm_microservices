@@ -3,15 +3,16 @@ package com.epam.cucumber.steps.trainee;
 import com.epam.cucumber.steps.ResponseSteps;
 import com.epam.dto.auth.LoginDto;
 import com.epam.dto.trainee.TrainerRegistrationDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,18 +21,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 public class TraineeRegistrationSteps {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    @Autowired
-    private ResponseSteps responseSteps;
+    private final ResponseSteps responseSteps;
+
+    public TraineeRegistrationSteps(MockMvc mockMvc, ObjectMapper objectMapper, ResponseSteps responseSteps) {
+        this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
+        this.responseSteps = responseSteps;
+    }
 
     private TrainerRegistrationDto traineeDto;
-    private MvcResult result;
-    private LoginDto loginDto;
 
     @Given("a trainee named {string} {string} born on {string} living at {string}")
     public void a_trainee_named_born_on_living_at(String firstname, String lastname, String dob, String address) {
@@ -39,7 +41,7 @@ public class TraineeRegistrationSteps {
                 .firstname(firstname)
                 .lastname(lastname)
                 .address(address)
-                .dateOfBirth(LocalDate.parse(dob))
+                .dateOfBirth(!dob.isBlank() ? LocalDate.parse(dob) : null)
                 .build();
     }
 
@@ -47,19 +49,21 @@ public class TraineeRegistrationSteps {
     public void the_trainee_registers_at(String path) throws Exception {
         String requestJson = objectMapper.writeValueAsString(traineeDto);
 
-        result = mockMvc.perform(post(path)
+        MvcResult result = mockMvc.perform(post(path)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andReturn();
 
         responseSteps.setResult(result);
 
-        String responseBody = result.getResponse().getContentAsString();
-        loginDto = objectMapper.readValue(responseBody, LoginDto.class);
     }
 
-    @And("the response body contains a username and password")
-    public void the_response_body_contains_username_and_password() {
+    @And("the response body should contain a username and password")
+    public void the_response_body_contains_username_and_password() throws JsonProcessingException, UnsupportedEncodingException {
+        String responseBody = responseSteps.getResult().getResponse().getContentAsString();
+
+        LoginDto loginDto = objectMapper.readValue(responseBody, LoginDto.class);
+
         assertThat(loginDto).isNotNull();
         assertThat(loginDto.username()).isNotBlank();
         assertThat(loginDto.password()).isNotBlank();

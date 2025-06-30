@@ -56,18 +56,8 @@ public class LoginSteps {
         String bodyJson = responseSteps.getResult().getResponse().getContentAsString();
         Token token = objectMapper.readValue(bodyJson, Token.class);
 
-        System.out.println("with token: " + responseSteps.getResult().getResponse().getContentAsString());
-
         assertThat(token).isNotNull();
         assertThat(token.accessToken()).isNotBlank();
         assertThat(token.refreshToken()).isNotBlank();
-    }
-
-    @And("the body contains contains a list of errors")
-    public void theBodyContainsContainsAListOfErrors() throws Exception {
-        String contentAsString = responseSteps.getResult().getResponse().getContentAsString();
-        assertThat(contentAsString).isNotBlank();
-        List<?> list = objectMapper.readValue(contentAsString, List.class);
-        assertThat(list).isNotEmpty();
     }
 }
