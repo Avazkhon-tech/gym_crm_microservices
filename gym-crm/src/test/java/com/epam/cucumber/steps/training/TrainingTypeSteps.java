@@ -39,7 +39,7 @@ public class TrainingTypeSteps {
         result = mockMvc.perform(get(path).contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        responseSteps.setResult(result);
+        responseSteps.setMvcResult(result);
 
         String content = result.getResponse().getContentAsString();
         responseList = objectMapper.readValue(content, new TypeReference<>() {});

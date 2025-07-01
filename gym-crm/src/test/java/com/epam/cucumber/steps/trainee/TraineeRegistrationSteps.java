@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -18,20 +19,12 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-
+@RequiredArgsConstructor
 public class TraineeRegistrationSteps {
 
     private final MockMvc mockMvc;
-
     private final ObjectMapper objectMapper;
-
     private final ResponseSteps responseSteps;
-
-    public TraineeRegistrationSteps(MockMvc mockMvc, ObjectMapper objectMapper, ResponseSteps responseSteps) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-        this.responseSteps = responseSteps;
-    }
 
     private TrainerRegistrationDto traineeDto;
 
@@ -54,13 +47,13 @@ public class TraineeRegistrationSteps {
                         .content(requestJson))
                 .andReturn();
 
-        responseSteps.setResult(result);
+        responseSteps.setMvcResult(result);
 
     }
 
     @And("the response body should contain a username and password")
     public void the_response_body_contains_username_and_password() throws JsonProcessingException, UnsupportedEncodingException {
-        String responseBody = responseSteps.getResult().getResponse().getContentAsString();
+        String responseBody = responseSteps.getMvcResult().getResponse().getContentAsString();
 
         LoginDto loginDto = objectMapper.readValue(responseBody, LoginDto.class);
 

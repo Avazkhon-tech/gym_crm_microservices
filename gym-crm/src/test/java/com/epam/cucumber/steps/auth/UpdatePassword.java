@@ -5,6 +5,7 @@ import com.epam.dto.auth.CredentialsUpdateDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -13,6 +14,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+@RequiredArgsConstructor
 public class UpdatePassword {
 
     private final MockMvc mockMvc;
@@ -20,11 +22,6 @@ public class UpdatePassword {
     private final ObjectMapper objectMapper;
     private CredentialsUpdateDto credentialsUpdateDto;
 
-    public UpdatePassword(MockMvc mockMvc, ResponseSteps responseSteps, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.responseSteps = responseSteps;
-        this.objectMapper = objectMapper;
-    }
 
     @Given("a user {string} with current password {string} and new password {string}")
     public void a_user_with_current_password(String username, String password, String newPassword) {
@@ -42,6 +39,6 @@ public class UpdatePassword {
                         .content(bodyJson))
                 .andReturn();
 
-        responseSteps.setResult(result);
+        responseSteps.setMvcResult(result);
     }
 }

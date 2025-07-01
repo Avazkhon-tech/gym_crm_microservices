@@ -7,16 +7,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 
+@RequiredArgsConstructor
 public class LoginSteps {
 
     private final MockMvc mockMvc;
@@ -24,12 +24,6 @@ public class LoginSteps {
     private final ObjectMapper objectMapper;
 
     private final ResponseSteps responseSteps;
-
-    public LoginSteps(ResponseSteps responseSteps, MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.responseSteps = responseSteps;
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-    }
 
     private LoginDto loginDto;
 
@@ -48,12 +42,12 @@ public class LoginSteps {
                         .content(json))
                 .andReturn();
 
-        responseSteps.setResult(result);
+        responseSteps.setMvcResult(result);
     }
 
     @And("the body contains a non‑blank JWT and refresh token")
     public void the_body_contains_tokens() throws Exception {
-        String bodyJson = responseSteps.getResult().getResponse().getContentAsString();
+        String bodyJson = responseSteps.getMvcResult().getResponse().getContentAsString();
         Token token = objectMapper.readValue(bodyJson, Token.class);
 
         assertThat(token).isNotNull();

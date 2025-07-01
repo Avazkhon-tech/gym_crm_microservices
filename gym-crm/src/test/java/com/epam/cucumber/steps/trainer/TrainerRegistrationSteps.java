@@ -49,7 +49,7 @@ public class TrainerRegistrationSteps {
                         .content(requestJson))
                 .andReturn();
 
-        responseSteps.setResult(result);
+        responseSteps.setMvcResult(result);
 
         String responseBody = result.getResponse().getContentAsString();
         loginDto = objectMapper.readValue(responseBody, LoginDto.class);

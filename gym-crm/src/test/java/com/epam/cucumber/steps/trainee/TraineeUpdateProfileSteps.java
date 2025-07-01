@@ -11,8 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
-import org.bouncycastle.asn1.ocsp.ResponseData;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,23 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-
+@RequiredArgsConstructor
 public class TraineeUpdateProfileSteps {
 
     private final MockMvc mockMvc;
-
     private final ObjectMapper objectMapper;
-
     private final ResponseSteps responseSteps;
-
     private final TraineeRepository traineeRepository;
-
-    public TraineeUpdateProfileSteps(MockMvc mockMvc, ObjectMapper objectMapper, ResponseSteps responseSteps, TraineeRepository traineeRepository) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-        this.responseSteps = responseSteps;
-        this.traineeRepository = traineeRepository;
-    }
 
     private String username;
     private TraineeProfileUpdateDto updateDto;
@@ -99,14 +88,14 @@ public class TraineeUpdateProfileSteps {
                         .content(json))
                 .andReturn();
 
-        responseSteps.setResult(result);
+        responseSteps.setMvcResult(result);
 
 
     }
 
     @And("the response contains updated info")
     public void the_response_contains_updated_fields() throws UnsupportedEncodingException, JsonProcessingException {
-        String responseBody = responseSteps.getResult().getResponse().getContentAsString();
+        String responseBody = responseSteps.getMvcResult().getResponse().getContentAsString();
         responseDto = objectMapper.readValue(responseBody, TraineeProfileDto.class);
 
         assertThat(responseDto).isNotNull();

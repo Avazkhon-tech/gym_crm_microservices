@@ -61,12 +61,12 @@ public class TrainerUpdateProfileSteps {
                         .content(json))
                 .andReturn();
 
-        responseSteps.setResult(result);
+        responseSteps.setMvcResult(result);
     }
 
     @And("the response for trainer profile update request contains updated info")
     public void the_response_contains_updated_info() throws UnsupportedEncodingException, JsonProcessingException {
-        String bodyJson = responseSteps.getResult().getResponse().getContentAsString();
+        String bodyJson = responseSteps.getMvcResult().getResponse().getContentAsString();
         TrainerProfileDto responseDto = objectMapper.readValue(bodyJson, TrainerProfileDto.class);
 
         assertThat(responseDto).isNotNull();

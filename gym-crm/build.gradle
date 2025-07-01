@@ -88,6 +88,11 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation group: 'org.instancio', name: 'instancio-junit', version: instancioVersion
+
+    // === Lombok Testing scope ===
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+
 }
 
 jacoco {
