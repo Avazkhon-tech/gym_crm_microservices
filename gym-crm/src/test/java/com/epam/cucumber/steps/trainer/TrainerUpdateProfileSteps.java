@@ -1,12 +1,14 @@
 package com.epam.cucumber.steps.trainer;
 
 import com.epam.cucumber.steps.ResponseSteps;
+import com.epam.cucumber.steps.SharedMemory;
 import com.epam.dto.trainer.TrainerProfileDto;
 import com.epam.dto.trainer.TrainerProfileUpdateDto;
 import com.epam.repository.TrainerRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,32 +21,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+@RequiredArgsConstructor
 public class TrainerUpdateProfileSteps {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final  MockMvc mockMvc;
+    private final  ObjectMapper objectMapper;
+    private final  ResponseSteps responseSteps;
+    private final SharedMemory sharedMemory;
 
-    @Autowired
-    private TrainerRepository trainerRepository;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private ResponseSteps responseSteps;
-
-    private String username;
     private TrainerProfileUpdateDto updateDto;
 
 
-    @Given("a trainer to update with username {string} exists")
-    public void a_trainer_to_update_exists(String username) {
-        this.username = username;
-        assertThat(trainerRepository.existsByUsername(username)).isTrue();
-    }
-
     @When("trainer updates their profile with new details")
     public void trainer_updates_profile() throws Exception {
+        String username = sharedMemory.get("trainerUsername").toString();
+
         updateDto = TrainerProfileUpdateDto.builder()
                 .username(username)
                 .firstname("Azam")

@@ -2,10 +2,6 @@ package com.epam.cucumber.steps.trainee;
 
 import com.epam.cucumber.steps.ResponseSteps;
 import com.epam.cucumber.steps.SharedMemory;
-import com.epam.repository.TraineeRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.But;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -19,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @RequiredArgsConstructor
-public class UpdateActiveStatusSteps {
+public class UpdateTraineeActiveStatusSteps {
 
     private final MockMvc mockMvc;
     private final ResponseSteps responseSteps;
