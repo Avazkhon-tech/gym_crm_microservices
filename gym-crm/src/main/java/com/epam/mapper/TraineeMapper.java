@@ -2,7 +2,7 @@ package com.epam.mapper;
 
 import com.epam.dto.trainee.TraineeProfileDto;
 import com.epam.dto.trainee.TraineeProfileUpdateDto;
-import com.epam.dto.trainee.TraineeRegistrationDto;
+import com.epam.dto.trainee.TrainerRegistrationDto;
 import com.epam.model.Trainee;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,7 +17,7 @@ public interface TraineeMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "trainers", ignore = true)
     @Mapping(target = "trainings", ignore = true)
-    Trainee toEntity(TraineeRegistrationDto registrationDto);
+    Trainee toEntity(TrainerRegistrationDto registrationDto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "trainers", ignore = true)

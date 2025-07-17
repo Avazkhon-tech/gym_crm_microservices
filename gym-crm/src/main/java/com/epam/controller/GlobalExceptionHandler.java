@@ -6,6 +6,8 @@ import com.epam.dto.response.ResponseMessage;
 import com.epam.exception.AccountBlockedException;
 import com.epam.exception.AuthenticationException;
 import com.epam.exception.EntityDoesNotExistException;
+import com.epam.exception.InvalidPasswordException;
+import com.epam.exception.InvalidatedTokenException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +52,17 @@ public class GlobalExceptionHandler {
         return new ResponseMessage(e.getMessage());
     }
 
+    @ExceptionHandler(InvalidPasswordException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseMessage handleInvalidPasswordException(InvalidPasswordException e) {
+        return new ResponseMessage(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidatedTokenException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseMessage handleInvalidatedTokenException(InvalidatedTokenException e) {
+        return new ResponseMessage(e.getMessage());
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

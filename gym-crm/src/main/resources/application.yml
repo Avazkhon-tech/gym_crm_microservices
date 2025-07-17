@@ -46,7 +46,7 @@ brute:
 jwt:
   secret: aslfkjaslkdnrfuioqenrkqndlvjdnavkjdsnfldkjsn
   expiration:
-    time: 900000
+    time: 90000000000
 
 eureka:
   client:

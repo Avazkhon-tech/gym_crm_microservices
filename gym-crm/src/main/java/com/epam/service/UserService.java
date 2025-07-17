@@ -3,6 +3,7 @@ package com.epam.service;
 import com.epam.dto.auth.CredentialsUpdateDto;
 import com.epam.exception.AuthenticationException;
 import com.epam.exception.EntityDoesNotExistException;
+import com.epam.exception.InvalidPasswordException;
 import com.epam.model.User;
 import com.epam.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -49,11 +50,11 @@ public class UserService {
                 () -> new EntityDoesNotExistException("User", "username", credentialsUpdateDto.username()));
 
         if (!passwordEncoder.matches(credentialsUpdateDto.oldPassword(), user.getPassword())) {
-            throw new AuthenticationException("Old password is incorrect");
+            throw new InvalidPasswordException("Old password is incorrect");
         }
 
         if (credentialsUpdateDto.password().length() < 4) {
-            throw new AuthenticationException("Password has to be at least 4 characters long");
+            throw new InvalidPasswordException("Password has to be at least 4 characters long");
         }
 
         user.setPassword(passwordEncoder.encode(credentialsUpdateDto.password()));

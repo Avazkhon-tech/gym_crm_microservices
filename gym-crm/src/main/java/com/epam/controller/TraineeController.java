@@ -4,7 +4,7 @@ import com.epam.dto.auth.LoginDto;
 import com.epam.dto.response.ResponseMessage;
 import com.epam.dto.trainee.TraineeProfileDto;
 import com.epam.dto.trainee.TraineeProfileUpdateDto;
-import com.epam.dto.trainee.TraineeRegistrationDto;
+import com.epam.dto.trainee.TrainerRegistrationDto;
 import com.epam.dto.trainee.TraineeTrainerDto;
 import com.epam.service.TraineeService;
 import com.epam.utility.CurrentUserAccessor;
@@ -36,8 +36,8 @@ public class TraineeController {
     @Operation(summary = "Register a new trainee")
     @PostMapping("/register")
     public ResponseEntity<LoginDto> registerTrainee(
-            @Valid @RequestBody TraineeRegistrationDto traineeRegistrationDto) {
-        LoginDto traineeCredentials = traineeService.createTrainee(traineeRegistrationDto);
+            @Valid @RequestBody TrainerRegistrationDto trainerRegistrationDto) {
+        LoginDto traineeCredentials = traineeService.createTrainee(trainerRegistrationDto);
         return ResponseEntity.ok(traineeCredentials);
     }
 

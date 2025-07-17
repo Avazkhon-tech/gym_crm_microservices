@@ -2,6 +2,7 @@ package com.epam.service;
 
 import com.epam.exception.AuthenticationException;
 import com.epam.exception.EntityDoesNotExistException;
+import com.epam.exception.InvalidatedTokenException;
 import com.epam.model.RefreshToken;
 import com.epam.model.User;
 import com.epam.repository.RefreshTokenRepository;
@@ -63,11 +64,11 @@ public class RefreshTokenService {
 
     public RefreshToken verifyExpiration(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new AuthenticationException("Invalid refresh token has been provided"));
+                .orElseThrow(() -> new InvalidatedTokenException("Invalid refresh token has been provided"));
 
         if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
             refreshTokenRepository.delete(refreshToken);
-            throw new AuthenticationException("You session is expired. Please login again.");
+            throw new InvalidatedTokenException("Your session is expired. Please login again.");
         }
 
         return refreshToken;
